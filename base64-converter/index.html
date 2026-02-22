@@ -336,9 +336,23 @@
             document.getElementById('outputStats').textContent = '';
         }
 
+        const samples = [
+            { text: 'Hello, World! This is a sample text to encode.', mode: 'encode' },
+            { text: '{"user": "john", "role": "admin", "active": true}', mode: 'encode' },
+            { text: 'SGVsbG8sIFdvcmxkIQ==', mode: 'decode' },
+            { text: 'VGhpcyB3YXMgZW5jb2RlZCBpbiBCYXNlNjQ=', mode: 'decode' }
+        ];
+        let sampleIdx = 0;
+
         function loadSample() {
-            document.getElementById('textInput').value = 'Hello, World! This is a sample text to encode.';
-            encodeText();
+            const sample = samples[sampleIdx];
+            document.getElementById('textInput').value = sample.text;
+            if (sample.mode === 'encode') {
+                encodeText();
+            } else {
+                decodeText();
+            }
+            sampleIdx = (sampleIdx + 1) % samples.length;
         }
 
         function copyOutput() {
