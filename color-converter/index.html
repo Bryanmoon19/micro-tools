@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Converter | HEX, RGB, HSL Converter Online</title>
+    <meta name="description" content="Free online color converter. Convert between HEX, RGB, and HSL formats with a live preview. 100% client-side.">
+    <meta name="keywords" content="color converter, hex to rgb, rgb to hex, hsl to rgb, color picker, hex code, css color, online color tool">
+    <meta name="author" content="devhandbook.io">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://devhandbook.io/color-converter/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f59e0b',
+                        'primary-dark': '#d97706',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <div class="hidden bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400 bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400 bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400 bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-400"></div>
+
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="../" class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors mr-3 border-r border-gray-200 dark:border-gray-700 pr-3" title="All Tools">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M15 19l-7-7 7-7\"/></svg>
+                    <span class="hidden sm:inline">All Tools</span>
+                </a>
+                <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white font-bold text-lg">🎨</div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Color Converter</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">HEX, RGB & HSL Conversion</p>
+                </div>
+            </div>
+            <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z\"/></svg>
+                <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z\"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 mb-6">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300">Input Color</label>
+                        <button onclick="loadSample()" class="text-xs text-primary hover:text-primary-dark">Sample</button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="colorInput" placeholder="#6366f1 or rgb(99, 102, 241)" 
+                            class="w-full p-4 mono text-lg bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-all dark:text-white">
+                        <input type="color" id="colorPicker" class="absolute right-3 top-3 w-10 h-10 border-0 bg-transparent cursor-pointer">
+                    </div>
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">Supports HEX, RGB, RGBA, HSL, and named colors.</p>
+                </div>
+                <div class="flex flex-col items-center justify-center">
+                    <div id="previewSwatch" class="w-full h-32 md:h-40 rounded-xl shadow-inner border border-gray-200 dark:border-gray-700 transition-colors duration-200" style="background-color: #f59e0b"></div>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <!-- HEX -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-xs font-bold text-gray-500 uppercase">HEX</span>
+                    <button onclick="copyVal('hex')" class="text-primary hover:text-primary-dark"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\"/></svg></button>
+                </div>
+                <div class="p-4 text-center">
+                    <div id="hexVal" class="mono text-xl font-bold dark:text-white">#f59e0b</div>
+                </div>
+            </div>
+            <!-- RGB -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-xs font-bold text-gray-500 uppercase">RGB</span>
+                    <button onclick="copyVal('rgb')" class="text-primary hover:text-primary-dark"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\"/></svg></button>
+                </div>
+                <div class="p-4 text-center">
+                    <div id="rgbVal" class="mono text-xl font-bold dark:text-white">rgb(245, 158, 11)</div>
+                </div>
+            </div>
+            <!-- HSL -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-xs font-bold text-gray-500 uppercase">HSL</span>
+                    <button onclick="copyVal('hsl')" class="text-primary hover:text-primary-dark"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z\"/></svg></button>
+                </div>
+                <div class="p-4 text-center">
+                    <div id="hslVal" class="mono text-xl font-bold dark:text-white">hsl(38, 93%, 50%)</div>
+                </div>
+            </div>
+        </div>
+
+        <section class="mt-12">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
+        </section>
+    </main>
+
+    <footer class="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 mt-8">
+        <p>Color Converter — Convert HEX, RGB and HSL colors</p>
+        <p class="mt-1 text-xs">Free tool. No data collection. Part of the <a href="../" class="text-primary hover:underline">devhandbook.io</a> network.</p>
+    </footer>
+
+    <script>
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden');
+            }
+        }
+        updateThemeIcons();
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            updateThemeIcons();
+        });
+
+        const colorInput = document.getElementById('colorInput');
+        const colorPicker = document.getElementById('colorPicker');
+        const swatch = document.getElementById('previewSwatch');
+
+        function hexToRgb(hex) {
+            hex = hex.replace('#', '');
+            if (hex.length === 3) hex = hex.split('').map(x => x + x).join('');
+            const r = parseInt(hex.substring(0, 2), 16);
+            const g = parseInt(hex.substring(2, 4), 16);
+            const b = parseInt(hex.substring(4, 6), 16);
+            return isNaN(r) ? null : { r, g, b };
+        }
+
+        function rgbToHex(r, g, b) {
+            return "#" + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+
+        function rgbToHsl(r, g, b) {
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+            if (max === min) { h = s = 0; } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+                switch (max) {
+                    case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                    case g: h = (b - r) / d + 2; break;
+                    case b: h = (r - g) / d + 4; break;
+                }
+                h /= 6;
+            }
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+        }
+
+        function updateAll(color) {
+            const ctx = document.createElement('canvas').getContext('2d');
+            ctx.fillStyle = color;
+            const computed = ctx.fillStyle; // will be hex #rrggbb
+            const rgb = hexToRgb(computed);
+            if (!rgb) return;
+            
+            const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+            
+            swatch.style.backgroundColor = computed;
+            document.getElementById('hexVal').textContent = computed;
+            document.getElementById('rgbVal').textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+            document.getElementById('hslVal').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+            colorPicker.value = computed;
+        }
+
+        colorInput.addEventListener('input', () => updateAll(colorInput.value));
+        colorPicker.addEventListener('input', () => {
+            colorInput.value = colorPicker.value;
+            updateAll(colorPicker.value);
+        });
+
+        function copyVal(id) {
+            const text = document.getElementById(id + 'Val').textContent;
+            navigator.clipboard.writeText(text);
+        }
+
+        const samples = ['#6366f1', 'rgb(236, 72, 153)', 'hsl(38, 93%, 50%)', 'tomato'];
+        let sIdx = 0;
+        function loadSample() {
+            colorInput.value = samples[sIdx];
+            updateAll(samples[sIdx]);
+            sIdx = (sIdx + 1) % samples.length;
+        }
+
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' },
+            { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-Encode & Decode', icon: 'URL', colors: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400' },
+            { id: 'regex-tester', name: 'Regex Tester', desc: 'Regular Expression Debugger', icon: '/re/', colors: 'bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400' },
+            { id: 'html-entities', name: 'HTML Entities', desc: 'Encode & Decode Entities', icon: '&lt;&gt;', colors: 'bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-400' },
+            { id: 'color-converter', name: 'Color Converter', desc: 'HEX ↔ RGB ↔ HSL', icon: '🎨', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' }
+        ];
+        const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
+        const currentTool = pathParts[pathParts.length - 1] || '';
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQXTZYP8H4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-BQXTZYP8H4');
+    </script>
+</body>
+</html>
