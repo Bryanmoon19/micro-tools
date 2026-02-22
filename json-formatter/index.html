@@ -114,7 +114,7 @@
         <div class="grid lg:grid-cols-2 gap-6">
             <!-- Input Panel -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         Input
@@ -137,14 +137,14 @@
             <!-- Output Panel -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
                 <!-- Tabs -->
-                <div class="bg-gray-100 dark:bg-gray-750 px-4 border-b border-gray-200 dark:border-gray-700 flex">
+                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 border-b border-gray-200 dark:border-gray-700 flex">
                     <button id="tabFormatted" onclick="switchTab('formatted')" class="px-4 py-3 text-sm font-medium tab-active transition-colors">Formatted</button>
                     <button id="tabTree" onclick="switchTab('tree')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Tree View</button>
                     <button id="tabMinified" onclick="switchTab('minified')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Minified</button>
                 </div>
 
                 <!-- Toolbar -->
-                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-850">
+                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-800/50">
                     <div class="flex items-center gap-2">
                         <label class="text-xs text-gray-600 dark:text-gray-400">Indent:</label>
                         <select id="indentSize" onchange="formatJSON()" class="text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:text-white">
@@ -184,7 +184,7 @@
 
                     <!-- Minified View -->
                     <div id="viewMinified" class="h-80 overflow-auto hidden">
-                        <pre id="minifiedOutput" class="mono text-sm break-all"></pre>
+                        <pre id="minifiedOutput" class="mono text-sm break-all dark:text-gray-200"></pre>
                     </div>
 
                     <!-- Empty State -->
@@ -381,7 +381,7 @@
             html += `<span class="text-gray-400 ml-1">${keys.length} ${isArray ? 'items' : 'keys'}</span>`;
             html += '</div>';
             
-            html += '<div class="tree-content ml-4" style="border-left: 1px solid #e5e7eb; padding-left: 8px;"'>';
+            html += '<div class="tree-content ml-4" style="border-left: 1px solid currentColor; padding-left: 8px; opacity: 0.2;"'>';
             
             keys.forEach((key, index) => {
                 const value = obj[key];
