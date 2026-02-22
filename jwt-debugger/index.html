@@ -267,11 +267,31 @@
         const outputSection = document.getElementById('outputSection');
         const emptyState = document.getElementById('emptyState');
 
-        // Sample JWT
-        const sampleJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE4MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+        // Sample JWTs
+        const sampleJWTs = [
+            {
+                name: 'Basic User Token',
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJleHAiOjE4MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c'
+            },
+            {
+                name: 'Admin with Roles',
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0MiIsIm5hbWUiOiJBZG1pbiBVc2VyIiwiZW1haWwiOiJhZG1pbkBleGFtcGxlLmNvbSIsInJvbGVzIjpbImFkbWluIiwiZWRpdG9yIiwidXNlciJdLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MTgwMDAwMDAwMH0.8jx1hVMy73gNZ8Y6Fk4wCcf9t9h2VY7x6O1lE_bFqJk'
+            },
+            {
+                name: 'RS256 with Issuer',
+                token: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtleS0xIn0.eyJpc3MiOiJodHRwczovL2F1dGguZXhhbXBsZS5jb20iLCJhdWQiOiJteS1hcGkiLCJzdWIiOiJ1c2VyXzk4NyIsInNjb3BlIjoicmVhZDpkYXRhIHdyaXRlOmRhdGEiLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MTcwMDAwMzYwMH0.fake-rs256-signature-for-demo'
+            },
+            {
+                name: 'Expired Token',
+                token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5OTkiLCJuYW1lIjoiRXhwaXJlZCBVc2VyIiwiaWF0IjoxNjAwMDAwMDAwLCJleHAiOjE2MDAwMDM2MDB9.expired-demo-signature'
+            }
+        ];
+        let sampleIndex = 0;
 
         document.getElementById('sampleBtn').addEventListener('click', () => {
-            jwtInput.value = sampleJWT;
+            const sample = sampleJWTs[sampleIndex];
+            jwtInput.value = sample.token;
+            sampleIndex = (sampleIndex + 1) % sampleJWTs.length;
             decodeJWT();
         });
 
@@ -352,8 +372,7 @@
 
                 document.getElementById('tokenMeta').innerHTML = meta.join('');
 
-                // Save to localStorage
-                localStorage.setItem('lastJWT', token);
+
 
             } catch (e) {
                 errorMsg.classList.remove('hidden');
@@ -397,12 +416,7 @@
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
 
-        // Load last JWT
-        const lastJWT = localStorage.getItem('lastJWT');
-        if (lastJWT) {
-            jwtInput.value = lastJWT;
-            decodeJWT();
-        }
+
     </script>
 </body>
 </html>

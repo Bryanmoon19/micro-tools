@@ -480,13 +480,9 @@
         }
 
         // Load saved text
-        const savedText = localStorage.getItem('base64Input');
-        if (savedText) {
-            document.getElementById('textInput').value = savedText;
-        }
+
 
         document.getElementById('textInput').addEventListener('input', (e) => {
-            localStorage.setItem('base64Input', e.target.value);
         });
     </script>
 </body>
