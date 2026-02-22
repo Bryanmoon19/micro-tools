@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://micro-tools.netlify.app/sitemap.xml
+Sitemap: https://devhandbook.io/sitemap.xml
