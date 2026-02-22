@@ -40,6 +40,8 @@
         }
     </script>
 </head>
+    <!-- Tailwind safelist (hidden, ensures CSS is generated for dynamic content) -->
+    <div class="hidden bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400 bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400"></div>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -61,7 +63,7 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
+                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 px-3 py-1.5 rounded-full">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
                     Client-side only
                 </span>
@@ -346,11 +348,11 @@
     
         // Dynamic Related Tools
         const allTools = [
-            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
-            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' },
-            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
-            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
-            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' }
         ];
         const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
         const currentTool = pathParts[pathParts.length - 1] || '';
