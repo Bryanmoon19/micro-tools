@@ -1,27 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://micro-tools.netlify.app/</loc>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://micro-tools.netlify.app/jwt-debugger/</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://micro-tools.netlify.app/base64-converter/</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://micro-tools.netlify.app/json-formatter/</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://micro-tools.netlify.app/timestamp-converter/</loc>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://micro-tools.netlify.app/password-generator/</loc>
-    <priority>0.8</priority>
-  </url>
+  <url><loc>https://micro-tools.pages.dev/</loc><lastmod>2026-02-22</lastmod><priority>1.0</priority></url>
+  <url><loc>https://micro-tools.pages.dev/jwt-debugger/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://micro-tools.pages.dev/base64-converter/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://micro-tools.pages.dev/json-formatter/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://micro-tools.pages.dev/timestamp-converter/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://micro-tools.pages.dev/password-generator/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
+  <url><loc>https://micro-tools.pages.dev/url-encoder/</loc><lastmod>2026-02-22</lastmod><priority>0.8</priority></url>
 </urlset>

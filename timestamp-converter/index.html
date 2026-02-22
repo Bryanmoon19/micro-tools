@@ -352,7 +352,8 @@
             { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' },
             { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
             { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400' },
-            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' }
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' },
+            { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-Encode & Decode', icon: 'URL', colors: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400' }
         ];
         const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
         const currentTool = pathParts[pathParts.length - 1] || '';

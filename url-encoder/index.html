@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder / Decoder | Encode & Decode URLs Online</title>
+    <meta name="description" content="Free URL encoder and decoder. Encode special characters for URLs or decode percent-encoded strings instantly. 100% client-side — your data never leaves your browser.">
+    <meta name="keywords" content="url encoder, url decoder, percent encoding, url encode online, urlencode, urldecode, encode url, decode url, encodeURIComponent">
+    <meta name="author" content="Micro Tools">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="URL Encoder / Decoder | Encode & Decode URLs Online">
+    <meta property="og:description" content="Free URL encoder and decoder. 100% client-side — your data never leaves your browser.">
+    <meta property="og:type" content="website">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0ea5e9',
+                        'primary-dark': '#0284c7',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .highlight { background: rgba(14, 165, 233, 0.15); border-radius: 2px; padding: 0 2px; }
+        .dark .highlight { background: rgba(14, 165, 233, 0.25); }
+    </style>
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
+</head>
+<!-- Tailwind safelist (hidden, ensures CSS is generated for dynamic content) -->
+<div class="hidden bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400 bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400 bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400"></div>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <a href="../" class="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors mr-3 border-r border-gray-200 dark:border-gray-700 pr-3" title="All Tools">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span class="hidden sm:inline">All Tools</span>
+                </a>
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                    URL
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">URL Encoder / Decoder</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Percent-Encode & Decode</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900 px-3 py-1.5 rounded-full">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Client-side only
+                </span>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Privacy Notice -->
+        <div class="mb-6 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <div>
+                <h3 class="font-semibold text-blue-900 dark:text-blue-300 text-sm">🔒 Your Data Never Leaves Your Browser</h3>
+                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">All encoding/decoding runs locally in JavaScript. No server calls. Safe for API keys, tokens, and sensitive URLs.</p>
+            </div>
+        </div>
+
+        <!-- Encoding Mode -->
+        <div class="mb-6 flex items-center gap-3">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Mode:</span>
+            <div class="flex rounded-lg overflow-hidden border border-gray-300 dark:border-gray-600">
+                <button id="modeComponent" onclick="setMode('component')" class="px-4 py-2 text-sm font-medium bg-primary text-white transition-colors">
+                    encodeURIComponent
+                </button>
+                <button id="modeURI" onclick="setMode('uri')" class="px-4 py-2 text-sm font-medium bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400 transition-colors">
+                    encodeURI
+                </button>
+            </div>
+            <span id="modeHint" class="text-xs text-gray-500 dark:text-gray-400">Encodes all special characters (for query params)</span>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Input -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Input</span>
+                    <div class="flex gap-2">
+                        <button onclick="clearAll()" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400">Clear</button>
+                        <button onclick="loadSample()" class="text-xs text-primary hover:text-primary-dark">Sample</button>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <textarea id="inputText" placeholder="Enter text to encode, or a URL-encoded string to decode..."
+                        class="mono w-full h-48 p-4 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none transition-all dark:text-white"></textarea>
+                    <div id="inputStats" class="mt-2 text-xs text-gray-500 dark:text-gray-400">0 characters</div>
+                </div>
+            </div>
+
+            <!-- Output -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Output</span>
+                    <div class="flex gap-2">
+                        <button onclick="copyOutput()" id="copyBtn" class="text-xs flex items-center gap-1 text-primary hover:text-primary-dark">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            Copy
+                        </button>
+                        <button onclick="swapInputOutput()" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                            Swap
+                        </button>
+                    </div>
+                </div>
+                <div class="p-4">
+                    <textarea id="outputText" readonly
+                        class="mono w-full h-48 p-4 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg resize-none dark:text-white"></textarea>
+                    <div id="outputStats" class="mt-2 text-xs text-gray-500 dark:text-gray-400"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex justify-center gap-4 mt-6">
+            <button onclick="encodeInput()" class="px-8 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Encode
+            </button>
+            <button onclick="decodeInput()" class="px-8 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"/></svg>
+                Decode
+            </button>
+        </div>
+
+        <!-- Quick Reference -->
+        <div class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Common URL Encodings</span>
+            </div>
+            <div class="p-4 grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3">
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%20</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">Space</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%26</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">&amp; (ampersand)</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%3D</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">= (equals)</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%3F</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">? (question)</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%2F</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">/ (slash)</div>
+                </div>
+                <div class="text-center p-2 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <div class="mono text-lg text-primary font-bold">%23</div>
+                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1"># (hash)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Tools -->
+        <section class="mt-12">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 mt-8">
+        <p>URL Encoder / Decoder — Percent-encode and decode URLs online</p>
+        <p class="mt-1 text-xs">Free tool. No data collection. Part of the <a href="../" class="text-primary hover:underline">Micro Tools</a> network.</p>
+    </footer>
+
+    <script>
+        // Theme
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        updateThemeIcons();
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            updateThemeIcons();
+        });
+
+        // State
+        let currentMode = 'component'; // 'component' or 'uri'
+        const inputText = document.getElementById('inputText');
+        const outputText = document.getElementById('outputText');
+
+        // Mode switching
+        function setMode(mode) {
+            currentMode = mode;
+            const componentBtn = document.getElementById('modeComponent');
+            const uriBtn = document.getElementById('modeURI');
+            const hint = document.getElementById('modeHint');
+
+            if (mode === 'component') {
+                componentBtn.classList.add('bg-primary', 'text-white');
+                componentBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-600', 'dark:text-gray-400');
+                uriBtn.classList.remove('bg-primary', 'text-white');
+                uriBtn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-600', 'dark:text-gray-400');
+                hint.textContent = 'Encodes all special characters (for query params)';
+            } else {
+                uriBtn.classList.add('bg-primary', 'text-white');
+                uriBtn.classList.remove('bg-white', 'dark:bg-gray-800', 'text-gray-600', 'dark:text-gray-400');
+                componentBtn.classList.remove('bg-primary', 'text-white');
+                componentBtn.classList.add('bg-white', 'dark:bg-gray-800', 'text-gray-600', 'dark:text-gray-400');
+                hint.textContent = 'Preserves URL structure chars (:, /, ?, #, &)';
+            }
+
+            // Re-encode if there's content
+            if (inputText.value.trim()) encodeInput();
+        }
+
+        // Encode
+        function encodeInput() {
+            const input = inputText.value;
+            if (!input) return;
+
+            try {
+                const encoded = currentMode === 'component'
+                    ? encodeURIComponent(input)
+                    : encodeURI(input);
+                outputText.value = encoded;
+                updateStats(input, encoded);
+            } catch (e) {
+                outputText.value = 'Error: ' + e.message;
+            }
+        }
+
+        // Decode
+        function decodeInput() {
+            const input = inputText.value.trim();
+            if (!input) return;
+
+            try {
+                const decoded = currentMode === 'component'
+                    ? decodeURIComponent(input)
+                    : decodeURI(input);
+                outputText.value = decoded;
+                updateStats(input, decoded);
+            } catch (e) {
+                outputText.value = 'Error: Malformed URL-encoded string';
+            }
+        }
+
+        function updateStats(input, output) {
+            document.getElementById('inputStats').textContent = `${input.length} characters`;
+            const diff = output.length - input.length;
+            const diffText = diff > 0 ? `(+${diff} chars)` : diff < 0 ? `(${diff} chars)` : '(same length)';
+            document.getElementById('outputStats').textContent = `${output.length} characters ${diffText}`;
+        }
+
+        // Input tracking
+        inputText.addEventListener('input', () => {
+            document.getElementById('inputStats').textContent = `${inputText.value.length} characters`;
+        });
+
+        // Clear
+        function clearAll() {
+            inputText.value = '';
+            outputText.value = '';
+            document.getElementById('inputStats').textContent = '0 characters';
+            document.getElementById('outputStats').textContent = '';
+        }
+
+        // Swap
+        function swapInputOutput() {
+            const temp = inputText.value;
+            inputText.value = outputText.value;
+            outputText.value = temp;
+            document.getElementById('inputStats').textContent = `${inputText.value.length} characters`;
+        }
+
+        // Copy
+        function copyOutput() {
+            outputText.select();
+            document.execCommand('copy');
+            const btn = document.getElementById('copyBtn');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+            setTimeout(() => btn.innerHTML = original, 1500);
+        }
+
+        // Samples
+        const samples = [
+            { text: 'https://example.com/search?q=hello world&lang=en&page=1', mode: 'encode' },
+            { text: 'name=John Doe&email=john@example.com&msg=Hello, how are you?', mode: 'encode' },
+            { text: 'https%3A%2F%2Fexample.com%2Fapi%3Ftoken%3Dabc123%26user%3Djohn', mode: 'decode' },
+            { text: 'Caf%C3%A9%20%26%20Cr%C3%A8me%20%E2%98%95', mode: 'decode' }
+        ];
+        let sampleIdx = 0;
+
+        function loadSample() {
+            const sample = samples[sampleIdx];
+            inputText.value = sample.text;
+            if (sample.mode === 'encode') {
+                encodeInput();
+            } else {
+                decodeInput();
+            }
+            sampleIdx = (sampleIdx + 1) % samples.length;
+        }
+
+        // Dynamic Related Tools
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' },
+            { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-Encode & Decode', icon: 'URL', colors: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400' }
+        ];
+        const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
+        const currentTool = pathParts[pathParts.length - 1] || '';
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
+    </script>
+</body>
+</html>
