@@ -66,6 +66,12 @@
         .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
         .dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
     </style>
+    <script>
+        // Apply dark mode BEFORE page renders to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
     <!-- Header -->
@@ -114,7 +120,7 @@
         <div class="grid lg:grid-cols-2 gap-6">
             <!-- Input Panel -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         Input
@@ -137,14 +143,14 @@
             <!-- Output Panel -->
             <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
                 <!-- Tabs -->
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 border-b border-gray-200 dark:border-gray-700 flex">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 border-b border-gray-200 dark:border-gray-700 flex">
                     <button id="tabFormatted" onclick="switchTab('formatted')" class="px-4 py-3 text-sm font-medium tab-active transition-colors">Formatted</button>
                     <button id="tabTree" onclick="switchTab('tree')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Tree View</button>
                     <button id="tabMinified" onclick="switchTab('minified')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Minified</button>
                 </div>
 
                 <!-- Toolbar -->
-                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-800/50">
+                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-700">
                     <div class="flex items-center gap-2">
                         <label class="text-xs text-gray-600 dark:text-gray-400">Indent:</label>
                         <select id="indentSize" onchange="formatJSON()" class="text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:text-white">
@@ -220,22 +226,7 @@
         <!-- Related Tools -->
         <section class="mt-12">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
-            <div class="grid sm:grid-cols-2 gap-4">
-                <a href="../jwt-debugger/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">JWT</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">JWT Debugger</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Decode JSON Web Tokens</p>
-                    </div>
-                </a>
-                <a href="../base64-converter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">B64</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">Base64 Converter</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Encode & Decode Base64</p>
-                    </div>
-                </a>
-            </div>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
         </section>
     </main>
 
@@ -532,6 +523,31 @@
             updateInputStats();
             formatJSON();
         }
+    
+        // Dynamic Related Tools
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
+        ];
+        const currentTool = window.location.pathname.split('/').filter(Boolean).pop();
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
+
     </script>
 </body>
 </html>

@@ -42,6 +42,12 @@
         .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .tool-card:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
     </style>
+    <script>
+        // Apply dark mode BEFORE page renders to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300 font-sans">
     <!-- Header -->
@@ -100,7 +106,7 @@
             <div class="grid md:grid-cols-2 gap-6">
                 <!-- Input -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Input (Text)</span>
                         <div class="flex gap-2">
                             <button onclick="clearText()" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400">Clear</button>
@@ -123,7 +129,7 @@
 
                 <!-- Output -->
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                         <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Output</span>
                         <div class="flex gap-2">
                             <button onclick="copyOutput()" id="copyBtn" class="text-xs flex items-center gap-1 text-primary hover:text-primary-dark">
@@ -224,22 +230,7 @@
         <!-- Related Tools -->
         <section class="mt-12">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
-            <div class="grid sm:grid-cols-2 gap-4">
-                <a href="../jwt-debugger/" class="tool-card bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4">
-                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">JWT</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">JWT Debugger</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Decode JSON Web Tokens</p>
-                    </div>
-                </a>
-                <div class="tool-card bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 opacity-60">
-                    <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 font-bold">JSON</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">JSON Formatter</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
-                    </div>
-                </div>
-            </div>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
         </section>
     </main>
 
@@ -484,6 +475,31 @@
 
         document.getElementById('textInput').addEventListener('input', (e) => {
         });
+    
+        // Dynamic Related Tools
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
+        ];
+        const currentTool = window.location.pathname.split('/').filter(Boolean).pop();
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
+
     </script>
 </body>
 </html>

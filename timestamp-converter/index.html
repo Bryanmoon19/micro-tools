@@ -33,6 +33,12 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .clock-digit { font-variant-numeric: tabular-nums; }
     </style>
+    <script>
+        // Apply dark mode BEFORE page renders to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
     <!-- Header -->
@@ -86,7 +92,7 @@
         <div class="grid md:grid-cols-2 gap-6">
             <!-- Timestamp to Date -->
             <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Timestamp to Date
@@ -151,7 +157,7 @@
 
             <!-- Date to Timestamp -->
             <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         Date to Timestamp
@@ -214,32 +220,7 @@
         <!-- Related Tools -->
         <section class="mt-12">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <a href="../jwt-debugger/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">JWT</div>
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">JWT Debugger</h4>
-                    </div>
-                </a>
-                <a href="../base64-converter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm">B64</div>
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">Base64 Converter</h4>
-                    </div>
-                </a>
-                <a href="../json-formatter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
-                    <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-sm">{}</div>
-                    <div>
-                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">JSON Formatter</h4>
-                    </div>
-                </a>
-                <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 opacity-60">
-                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-sm">🔒</div>
-                    <div>
-                        <h4 class="font-medium text-gray-700 dark:text-gray-300 text-sm">Password Generator</h4>
-                    </div>
-                </div>
-            </div>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
         </section>
     </main>
 
@@ -362,6 +343,31 @@
         function copyResult(id) {
             navigator.clipboard.writeText(document.getElementById(id).textContent);
         }
+    
+        // Dynamic Related Tools
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
+        ];
+        const currentTool = window.location.pathname.split('/').filter(Boolean).pop();
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
+
     </script>
 </body>
 </html>

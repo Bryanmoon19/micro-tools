@@ -42,6 +42,12 @@
         .dark .json-number { color: #f87171; }
         .dark .json-boolean { color: #a78bfa; }
     </style>
+    <script>
+        // Apply dark mode BEFORE page renders to prevent flash
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+    </script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
     <!-- Header -->
@@ -125,7 +131,7 @@
         <div id="outputSection" class="hidden fade-in grid gap-6 md:grid-cols-3">
             <!-- Header -->
             <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Header</span>
                     <span class="text-xs text-gray-400 dark:text-gray-500 mono">ALGORITHM</span>
                 </div>
@@ -142,7 +148,7 @@
 
             <!-- Payload -->
             <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Payload</span>
                     <span class="text-xs text-gray-400 dark:text-gray-500 mono">DATA</span>
                 </div>
@@ -159,7 +165,7 @@
 
             <!-- Signature & Meta -->
             <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="bg-gray-100 dark:bg-gray-900/50 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                <div class="bg-gray-100 dark:bg-gray-700 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
                     <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Signature</span>
                     <span class="text-xs text-gray-400 dark:text-gray-500 mono">VERIFICATION</span>
                 </div>
@@ -207,22 +213,7 @@
         <!-- Related Tools -->
         <section class="mt-12">
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
-            <div class="grid sm:grid-cols-2 gap-4">
-                <a href="../base64-converter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">B64</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">Base64 Converter</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Encode & Decode Base64</p>
-                    </div>
-                </a>
-                <a href="../json-formatter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
-                    <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold">{}</div>
-                    <div>
-                        <h3 class="font-medium text-gray-900 dark:text-white">JSON Formatter</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Pretty print JSON</p>
-                    </div>
-                </a>
-            </div>
+            <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
         </section>
     </main>
 
@@ -416,6 +407,31 @@
         setInterval(updateTimestamp, 1000);
         updateTimestamp();
 
+
+    
+        // Dynamic Related Tools
+        const allTools = [
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400' },
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
+        ];
+        const currentTool = window.location.pathname.split('/').filter(Boolean).pop();
+        const relatedEl = document.getElementById('relatedTools');
+        if (relatedEl) {
+            relatedEl.innerHTML = allTools
+                .filter(t => t.id !== currentTool)
+                .map(t => `
+                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
+                        <div>
+                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
+        }
 
     </script>
 </body>
