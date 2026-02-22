@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encoder/Decoder | Free Online Tool (Client-Side)</title>
+    <meta name="description" content="Free Base64 encoder and decoder. Convert text and files to Base64 instantly. 100% client-side — your data never leaves your browser. Supports standard and URL-safe Base64.">
+    <meta name="keywords" content="base64 encode, base64 decode, base64 converter, base64 encoder online, base64 decoder online, base64 image, url safe base64">
+    <meta name="author" content="Micro Tools">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Base64 Encoder/Decoder | Free Online Tool">
+    <meta property="og:description" content="Free Base64 encoder and decoder. Convert text and files instantly. 100% client-side.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://base64-converter.netlify.app/">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#10b981',
+                        'primary-dark': '#059669',
+                        secondary: '#6366f1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .drop-zone { transition: all 0.2s ease; }
+        .drop-zone.drag-over { background-color: rgba(16, 185, 129, 0.1); border-color: #10b981; }
+        .tool-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-card:hover { transform: translateY(-2px); box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300 font-sans">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                    B64
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Base64 Converter</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Encode & Decode Instantly</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Client-side only
+                </span>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Privacy Notice -->
+        <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <div>
+                <h3 class="font-semibold text-blue-900 dark:text-blue-300 text-sm">🔒 Your Data Never Leaves Your Browser</h3>
+                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">This tool runs entirely in your browser. No files or text are uploaded to any server. Safe for sensitive data.</p>
+            </div>
+        </div>
+
+        <!-- Mode Toggle -->
+        <div class="flex justify-center mb-8">
+            <div class="bg-white dark:bg-gray-800 p-1 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 inline-flex">
+                <button id="textModeBtn" class="px-6 py-2 rounded-lg text-sm font-medium bg-primary text-white transition-all">Text</button>
+                <button id="fileModeBtn" class="px-6 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-all">File/Image</button>
+            </div>
+        </div>
+
+        <!-- Text Mode -->
+        <div id="textMode" class="fade-in">
+            <div class="grid md:grid-cols-2 gap-6">
+                <!-- Input -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Input (Text)</span>
+                        <div class="flex gap-2">
+                            <button onclick="clearText()" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400">Clear</button>
+                            <button onclick="loadSample()" class="text-xs text-primary hover:text-primary-dark">Sample</button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <textarea id="textInput" placeholder="Enter text to encode or Base64 to decode..." 
+                            class="w-full h-48 p-4 text-sm font-mono bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none transition-all dark:text-white"></textarea>
+                        
+                        <!-- Options -->
+                        <div class="mt-4 flex items-center gap-4">
+                            <label class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+                                <input type="checkbox" id="urlSafeCheck" class="rounded border-gray-300 text-primary focus:ring-primary">
+                                URL-safe Base64 (for JWT, URLs)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-300">Output</span>
+                        <div class="flex gap-2">
+                            <button onclick="copyOutput()" id="copyBtn" class="text-xs flex items-center gap-1 text-primary hover:text-primary-dark">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                                Copy
+                            </button>
+                            <button onclick="swapText()" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+                                Swap
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <textarea id="textOutput" readonly 
+                            class="w-full h-48 p-4 text-sm font-mono bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg resize-none dark:text-white"></textarea>
+                        <div id="outputStats" class="mt-2 text-xs text-gray-500 dark:text-gray-400"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center gap-4 mt-6">
+                <button onclick="encodeText()" class="px-8 py-3 bg-primary hover:bg-primary-dark text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    Encode to Base64
+                </button>
+                <button onclick="decodeText()" class="px-8 py-3 bg-secondary hover:bg-indigo-600 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" transform="rotate(180 12 12)"/></svg>
+                    Decode from Base64
+                </button>
+            </div>
+        </div>
+
+        <!-- File Mode (Hidden by default) -->
+        <div id="fileMode" class="hidden fade-in">
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <!-- Drop Zone -->
+                <div id="dropZone" class="drop-zone p-12 text-center border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg m-6">
+                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+                    </div>
+                    <p class="text-gray-700 dark:text-gray-300 font-medium mb-2">Drop your file here</p>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">or click to browse</p>
+                    <input type="file" id="fileInput" class="hidden" accept="*/*">
+                    <button onclick="document.getElementById('fileInput').click()" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm">
+                        Choose File
+                    </button>
+                </div>
+
+                <!-- File Output -->
+                <div id="fileOutput" class="hidden p-6 border-t border-gray-200 dark:border-gray-700">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="flex items-center gap-3">
+                            <div id="fileIcon" class="w-10 h-10 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                                <svg class="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div>
+                                <p id="fileName" class="font-medium text-gray-900 dark:text-white"></p>
+                                <p id="fileSize" class="text-xs text-gray-500 dark:text-gray-400"></p>
+                            </div>
+                        </div>
+                        <button onclick="clearFile()" class="text-sm text-gray-500 hover:text-red-500">Remove</button>
+                    </div>
+
+                    <!-- Preview for images -->
+                    <div id="imagePreview" class="hidden mb-4">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Image Preview:</p>
+                        <img id="previewImg" class="max-h-48 rounded-lg border border-gray-200 dark:border-gray-700">
+                    </div>
+
+                    <textarea id="fileBase64Output" readonly 
+                        class="w-full h-32 p-4 text-sm font-mono bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg resize-none dark:text-white"></textarea>
+                    
+                    <div class="flex gap-3 mt-4">
+                        <button onclick="copyFileOutput()" class="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors text-sm flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            Copy Base64
+                        </button>
+                        <button onclick="downloadBase64()" class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors text-sm">
+                            Download as .txt
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Decode Base64 to File -->
+            <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden p-6">
+                <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Decode Base64 to File</h3>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Paste a data URL (e.g., data:image/png;base64,...) or raw Base64 string</p>
+                <textarea id="decodeInput" placeholder="data:image/png;base64,iVBORw0KGgo..." 
+                    class="w-full h-24 p-4 text-sm font-mono bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg resize-none dark:text-white mb-4"></textarea>
+                <button onclick="decodeToFile()" class="px-6 py-2 bg-secondary text-white rounded-lg hover:bg-indigo-600 transition-colors">
+                    Decode & Download
+                </button>
+            </div>
+        </div>
+
+        <!-- Related Tools -->
+        <section class="mt-12">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <a href="../jwt-debugger/" class="tool-card bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">JWT</div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 dark:text-white">JWT Debugger</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Decode JSON Web Tokens</p>
+                    </div>
+                </a>
+                <div class="tool-card bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 opacity-60">
+                    <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center text-gray-400 font-bold">JSON</div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 dark:text-white">JSON Formatter</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Coming soon...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 mt-8">
+        <p>Base64 Converter — 100% client-side encoding & decoding</p>
+        <p class="mt-1 text-xs">Free tool. No data collection. <a href="../jwt-debugger/" class="text-primary hover:underline">Also try our JWT Debugger</a>.</p>
+    </footer>
+
+    <script>
+        // Theme handling
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        updateThemeIcons();
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            updateThemeIcons();
+        });
+
+        // Mode switching
+        const textModeBtn = document.getElementById('textModeBtn');
+        const fileModeBtn = document.getElementById('fileModeBtn');
+        const textMode = document.getElementById('textMode');
+        const fileMode = document.getElementById('fileMode');
+
+        textModeBtn.addEventListener('click', () => {
+            textMode.classList.remove('hidden');
+            fileMode.classList.add('hidden');
+            textModeBtn.classList.add('bg-primary', 'text-white');
+            textModeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+            fileModeBtn.classList.remove('bg-primary', 'text-white');
+            fileModeBtn.classList.add('text-gray-600', 'dark:text-gray-400');
+        });
+
+        fileModeBtn.addEventListener('click', () => {
+            textMode.classList.add('hidden');
+            fileMode.classList.remove('hidden');
+            fileModeBtn.classList.add('bg-primary', 'text-white');
+            fileModeBtn.classList.remove('text-gray-600', 'dark:text-gray-400');
+            textModeBtn.classList.remove('bg-primary', 'text-white');
+            textModeBtn.classList.add('text-gray-600', 'dark:text-gray-400');
+        });
+
+        // Text encoding/decoding
+        function encodeText() {
+            const input = document.getElementById('textInput').value;
+            const urlSafe = document.getElementById('urlSafeCheck').checked;
+            if (!input) return;
+
+            try {
+                let encoded = btoa(unescape(encodeURIComponent(input)));
+                if (urlSafe) {
+                    encoded = encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+                }
+                document.getElementById('textOutput').value = encoded;
+                document.getElementById('outputStats').textContent = `Characters: ${encoded.length} | Bytes: ${new Blob([encoded]).size}`;
+            } catch (e) {
+                document.getElementById('textOutput').value = 'Error: Unable to encode';
+            }
+        }
+
+        function decodeText() {
+            const input = document.getElementById('textInput').value.trim();
+            if (!input) return;
+
+            try {
+                let base64 = input;
+                // Handle URL-safe Base64
+                base64 = base64.replace(/-/g, '+').replace(/_/g, '/');
+                // Add padding if needed
+                while (base64.length % 4) base64 += '=';
+                
+                const decoded = decodeURIComponent(escape(atob(base64)));
+                document.getElementById('textOutput').value = decoded;
+                document.getElementById('outputStats').textContent = `Characters: ${decoded.length} | Bytes: ${new Blob([decoded]).size}`;
+            } catch (e) {
+                document.getElementById('textOutput').value = 'Error: Invalid Base64 string';
+            }
+        }
+
+        function clearText() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('textOutput').value = '';
+            document.getElementById('outputStats').textContent = '';
+        }
+
+        function loadSample() {
+            document.getElementById('textInput').value = 'Hello, World! This is a sample text to encode.';
+            encodeText();
+        }
+
+        function copyOutput() {
+            const output = document.getElementById('textOutput');
+            output.select();
+            document.execCommand('copy');
+            
+            const btn = document.getElementById('copyBtn');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+            setTimeout(() => btn.innerHTML = original, 1500);
+        }
+
+        function swapText() {
+            const input = document.getElementById('textInput');
+            const output = document.getElementById('textOutput');
+            const temp = input.value;
+            input.value = output.value;
+            output.value = temp;
+        }
+
+        // File handling
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length) handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const base64 = e.target.result.split(',')[1];
+                document.getElementById('fileBase64Output').value = e.target.result;
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = formatBytes(file.size);
+                document.getElementById('fileOutput').classList.remove('hidden');
+
+                // Show preview for images
+                if (file.type.startsWith('image/')) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function formatBytes(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function clearFile() {
+            document.getElementById('fileInput').value = '';
+            document.getElementById('fileOutput').classList.add('hidden');
+            document.getElementById('imagePreview').classList.add('hidden');
+        }
+
+        function copyFileOutput() {
+            const output = document.getElementById('fileBase64Output');
+            output.select();
+            document.execCommand('copy');
+        }
+
+        function downloadBase64() {
+            const content = document.getElementById('fileBase64Output').value;
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'base64.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function decodeToFile() {
+            const input = document.getElementById('decodeInput').value.trim();
+            if (!input) return;
+
+            try {
+                let base64 = input;
+                let mimeType = 'application/octet-stream';
+                let filename = 'decoded-file';
+
+                // Handle data URLs
+                if (input.startsWith('data:')) {
+                    const match = input.match(/data:([^;]+);base64,(.+)/);
+                    if (match) {
+                        mimeType = match[1];
+                        base64 = match[2];
+                        const ext = mimeType.split('/')[1] || 'bin';
+                        filename = `decoded.${ext}`;
+                    }
+                }
+
+                // Decode
+                const byteString = atob(base64);
+                const bytes = new Uint8Array(byteString.length);
+                for (let i = 0; i < byteString.length; i++) {
+                    bytes[i] = byteString.charCodeAt(i);
+                }
+
+                const blob = new Blob([bytes], { type: mimeType });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                alert('Error decoding Base64: ' + e.message);
+            }
+        }
+
+        // Load saved text
+        const savedText = localStorage.getItem('base64Input');
+        if (savedText) {
+            document.getElementById('textInput').value = savedText;
+        }
+
+        document.getElementById('textInput').addEventListener('input', (e) => {
+            localStorage.setItem('base64Input', e.target.value);
+        });
+    </script>
+</body>
+</html>

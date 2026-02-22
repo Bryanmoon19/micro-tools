@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Formatter | Pretty Print & Validate JSON Online</title>
+    <meta name="description" content="Free JSON formatter and validator. Pretty print, minify, and validate JSON instantly. Syntax highlighting, tree view, and error detection. 100% client-side.">
+    <meta name="keywords" content="json formatter, json pretty print, json validator, json beautifier, json minifier, format json, json viewer, online json formatter">
+    <meta name="author" content="Micro Tools">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="JSON Formatter | Pretty Print & Validate JSON"
+    >
+    <meta property="og:description" content="Free JSON formatter and validator. Pretty print, minify, and validate JSON instantly.">
+    <meta property="og:type" content="website">
+    <link rel="canonical" href="https://json-formatter.netlify.app/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f59e0b',
+                        'primary-dark': '#d97706',
+                        secondary: '#6366f1',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .json-tree { font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.6; }
+        .json-key { color: #d946ef; font-weight: 500; }
+        .json-string { color: #22c55e; }
+        .json-number { color: #f59e0b; }
+        .json-boolean { color: #3b82f6; font-weight: 500; }
+        .json-null { color: #6b7280; font-style: italic; }
+        .dark .json-key { color: #f0abfc; }
+        .dark .json-string { color: #86efac; }
+        .dark .json-number { color: #fcd34d; }
+        .dark .json-boolean { color: #93c5fd; }
+        .dark .json-null { color: #9ca3af; }
+        .tree-line { display: flex; align-items: flex-start; }
+        .tree-toggle { cursor: pointer; user-select: none; width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; margin-right: 4px; color: #6b7280; }
+        .tree-toggle:hover { color: #374151; }
+        .dark .tree-toggle { color: #9ca3af; }
+        .dark .tree-toggle:hover { color: #d1d5db; }
+        .tree-collapsed .tree-content { display: none; }
+        .tree-collapsed .tree-toggle::before { content: '▶'; font-size: 10px; }
+        .tree-expanded .tree-toggle::before { content: '▼'; font-size: 10px; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-active { border-bottom: 2px solid #f59e0b; color: #f59e0b; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
+        .tab-inactive:hover { color: #374151; }
+        .dark .tab-inactive { color: #9ca3af; }
+        .dark .tab-inactive:hover { color: #d1d5db; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f3f4f6; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        .dark ::-webkit-scrollbar-track { background: #1f2937; }
+        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
+        .dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                    {}
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">JSON Formatter</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Pretty Print & Validate</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Client-side only
+                </span>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Privacy Notice -->
+        <div class="mb-6 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
+            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <div>
+                <h3 class="font-semibold text-blue-900 dark:text-blue-300 text-sm">🔒 Your JSON Never Leaves Your Browser</h3>
+                <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">All formatting happens locally in your browser. No data is sent to any server. Safe for sensitive JSON.</p>
+            </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6">
+            <!-- Input Panel -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+                <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        Input
+                    </span>
+                    <div class="flex gap-2">
+                        <button onclick="loadSample()" class="text-xs text-primary hover:text-primary-dark transition-colors">Sample</button>
+                        <button onclick="clearInput()" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400">Clear</button>
+                    </div>
+                </div>
+                
+                <div class="p-4 flex-1">
+                    <textarea id="jsonInput" placeholder="Paste your JSON here...&#10;&#10;{&#10;  &#34;example&#34;: &#34;paste valid JSON&#34;,&#10;  &#34;number&#34;: 42,&#10;  &#34;nested&#34;: {&#10;    &#34;array&#34;: [1, 2, 3]&#10;  }&#10;}"
+                        class="mono w-full h-96 p-4 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary resize-none transition-all dark:text-white"
+                    ></textarea>
+                    
+                    <div id="inputStats" class="mt-2 text-xs text-gray-500 dark:text-gray-400">0 chars, 0 lines</div>
+                </div>
+            </div>
+
+            <!-- Output Panel -->
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden flex flex-col">
+                <!-- Tabs -->
+                <div class="bg-gray-100 dark:bg-gray-750 px-4 border-b border-gray-200 dark:border-gray-700 flex">
+                    <button id="tabFormatted" onclick="switchTab('formatted')" class="px-4 py-3 text-sm font-medium tab-active transition-colors">Formatted</button>
+                    <button id="tabTree" onclick="switchTab('tree')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Tree View</button>
+                    <button id="tabMinified" onclick="switchTab('minified')" class="px-4 py-3 text-sm font-medium tab-inactive transition-colors">Minified</button>
+                </div>
+
+                <!-- Toolbar -->
+                <div class="px-4 py-2 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between bg-gray-50 dark:bg-gray-850">
+                    <div class="flex items-center gap-2">
+                        <label class="text-xs text-gray-600 dark:text-gray-400">Indent:</label>
+                        <select id="indentSize" onchange="formatJSON()" class="text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:text-white">
+                            <option value="2" selected>2 spaces</option>
+                            <option value="4">4 spaces</option>
+                            <option value="\t">Tab</option>
+                        </select>
+                        <label class="flex items-center gap-1 ml-3 text-xs text-gray-600 dark:text-gray-400 cursor-pointer">
+                            <input type="checkbox" id="sortKeys" onchange="formatJSON()" class="rounded border-gray-300 text-primary focus:ring-primary">
+                            Sort keys
+                        </label>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="copyOutput()" class="text-xs flex items-center gap-1 text-primary hover:text-primary-dark">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                            Copy
+                        </button>
+                        <button onclick="downloadJSON()" class="text-xs flex items-center gap-1 text-gray-500 hover:text-gray-700 dark:text-gray-400">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                            Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Content -->
+                <div class="p-4 flex-1 relative">
+                    <!-- Formatted View -->
+                    <div id="viewFormatted" class="h-80 overflow-auto">
+                        <pre id="formattedOutput" class="json-tree"></pre>
+                    </div>
+
+                    <!-- Tree View -->
+                    <div id="viewTree" class="h-80 overflow-auto hidden">
+                        <div id="treeOutput" class="json-tree"></div>
+                    </div>
+
+                    <!-- Minified View -->
+                    <div id="viewMinified" class="h-80 overflow-auto hidden">
+                        <pre id="minifiedOutput" class="mono text-sm break-all"></pre>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="absolute inset-0 flex items-center justify-center">
+                        <div class="text-center">
+                            <div class="w-12 h-12 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Enter JSON to format</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div id="statusBar" class="mt-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-3 flex items-center justify-between hidden">
+            <div class="flex items-center gap-4">
+                <span id="statusValid" class="hidden flex items-center gap-1 text-sm text-green-600 dark:text-green-400">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Valid JSON
+                </span>
+                <span id="statusInvalid" class="hidden flex items-center gap-1 text-sm text-red-600 dark:text-red-400">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                    Invalid JSON
+                </span>
+                <span id="statusSize" class="text-xs text-gray-500 dark:text-gray-400"></span>
+            </div>
+            
+            <div id="errorDetails" class="hidden text-sm text-red-600 dark:text-red-400"></div>
+        </div>
+
+        <!-- Related Tools -->
+        <section class="mt-12">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <div class="grid sm:grid-cols-2 gap-4">
+                <a href="../jwt-debugger/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold">JWT</div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 dark:text-white">JWT Debugger</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Decode JSON Web Tokens</p>
+                    </div>
+                </a>
+                <a href="../base64-converter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
+                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold">B64</div>
+                    <div>
+                        <h3 class="font-medium text-gray-900 dark:text-white">Base64 Converter</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Encode & Decode Base64</p>
+                    </div>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="max-w-7xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 mt-8">
+        <p>JSON Formatter — Pretty print and validate JSON online</p>
+        <p class="mt-1 text-xs">Free tool. No data collection. Part of the <a href="../" class="text-primary hover:underline">Micro Tools</a> network.</p>
+    </footer>
+
+    <script>
+        // Theme handling
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        }
+        updateThemeIcons();
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            updateThemeIcons();
+        });
+
+        // JSON handling
+        const jsonInput = document.getElementById('jsonInput');
+        let currentJSON = null;
+        let currentTab = 'formatted';
+
+        jsonInput.addEventListener('input', () => {
+            updateInputStats();
+            formatJSON();
+            localStorage.setItem('jsonFormatterInput', jsonInput.value);
+        });
+
+        function updateInputStats() {
+            const text = jsonInput.value;
+            const lines = text.split('\n').length;
+            document.getElementById('inputStats').textContent = `${text.length.toLocaleString()} chars, ${lines} lines`;
+        }
+
+        function formatJSON() {
+            const input = jsonInput.value.trim();
+            if (!input) {
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('statusBar').classList.add('hidden');
+                return;
+            }
+
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('statusBar').classList.remove('hidden');
+
+            try {
+                currentJSON = JSON.parse(input);
+                
+                // Sort keys if requested
+                const indent = document.getElementById('indentSize').value === '\t' ? '\t' : parseInt(document.getElementById('indentSize').value);
+                const sorted = document.getElementById('sortKeys').checked ? sortObjectKeys(currentJSON) : currentJSON;
+                
+                // Formatted output
+                const formatted = JSON.stringify(sorted, null, indent);
+                document.getElementById('formattedOutput').innerHTML = syntaxHighlight(formatted);
+                
+                // Tree view
+                document.getElementById('treeOutput').innerHTML = renderTree(sorted, '');
+                
+                // Minified output
+                const minified = JSON.stringify(sorted);
+                document.getElementById('minifiedOutput').textContent = minified;
+                
+                // Update status
+                document.getElementById('statusValid').classList.remove('hidden');
+                document.getElementById('statusInvalid').classList.add('hidden');
+                document.getElementById('errorDetails').classList.add('hidden');
+                document.getElementById('statusSize').textContent = `${minified.length.toLocaleString()} bytes minified`;
+                
+                // Setup tree toggles
+                setupTreeToggles();
+                
+            } catch (e) {
+                currentJSON = null;
+                document.getElementById('statusValid').classList.add('hidden');
+                document.getElementById('statusInvalid').classList.remove('hidden');
+                document.getElementById('errorDetails').classList.remove('hidden');
+                document.getElementById('errorDetails').textContent = e.message;
+                document.getElementById('formattedOutput').innerHTML = '';
+                document.getElementById('treeOutput').innerHTML = '';
+                document.getElementById('minifiedOutput').textContent = '';
+            }
+        }
+
+        function sortObjectKeys(obj) {
+            if (Array.isArray(obj)) {
+                return obj.map(sortObjectKeys);
+            } else if (obj !== null && typeof obj === 'object') {
+                return Object.keys(obj).sort().reduce((result, key) => {
+                    result[key] = sortObjectKeys(obj[key]);
+                    return result;
+                }, {});
+            }
+            return obj;
+        }
+
+        function syntaxHighlight(json) {
+            return json
+                .replace(/"/g, '&quot;')
+                .replace(/(\{|\}|\[|\])/g, '<span class="text-gray-600 dark:text-gray-400">$1</span>')
+                .replace(/(&quot;.*?\w.*?&quot;)(\s*:\s*)/g, '<span class="json-key">$1</span>$2')
+                .replace(/:&quot;(.*?)\u0026quot;/g, ':<span class="json-string">"&quot;$1&quot;"</span>')
+                .replace(/:(\d+\.?\d*)/g, ':<span class="json-number">$1</span>')
+                .replace(/:(true|false)/g, ':<span class="json-boolean">$1</span>')
+                .replace(/:(null)/g, ':<span class="json-null">$1</span>');
+        }
+
+        function renderTree(obj, path) {
+            if (obj === null) return '<span class="json-null">null</span>';
+            if (typeof obj === 'string') return `<span class="json-string">"${escapeHtml(obj)}"</span>`;
+            if (typeof obj === 'number') return `<span class="json-number">${obj}</span>`;
+            if (typeof obj === 'boolean') return `<span class="json-boolean">${obj}</span>`;
+            
+            const isArray = Array.isArray(obj);
+            const keys = Object.keys(obj);
+            
+            if (keys.length === 0) {
+                return isArray ? '[]' : '{}';
+            }
+
+            let html = `<div class="tree-item ${path ? 'tree-expanded' : ''}">`;
+            html += `<div class="tree-line">`;
+            html += `<span class="tree-toggle"></span>`;
+            html += isArray ? '[' : '{';
+            html += `<span class="text-gray-400 ml-1">${keys.length} ${isArray ? 'items' : 'keys'}</span>`;
+            html += '</div>';
+            
+            html += '<div class="tree-content ml-4" style="border-left: 1px solid #e5e7eb; padding-left: 8px;"'>';
+            
+            keys.forEach((key, index) => {
+                const value = obj[key];
+                const isLast = index === keys.length - 1;
+                
+                html += '<div class="tree-line">';
+                if (!isArray) {
+                    html += `<span class="json-key">"${escapeHtml(key)}"</span>: `;
+                }
+                
+                if (value !== null && typeof value === 'object') {
+                    html += renderTree(value, `${path}.${key}`);
+                } else {
+                    html += renderTree(value, '');
+                }
+                
+                if (!isLast) html += ',';
+                html += '</div>';
+            });
+            
+            html += '</div>';
+            html += `<div>${isArray ? ']' : '}'}</div>`;
+            html += '</div>';
+            
+            return html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function setupTreeToggles() {
+            document.querySelectorAll('.tree-toggle').forEach(toggle => {
+                toggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const item = toggle.closest('.tree-item');
+                    item.classList.toggle('tree-collapsed');
+                    item.classList.toggle('tree-expanded');
+                });
+            });
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            
+            // Hide all views
+            document.getElementById('viewFormatted').classList.add('hidden');
+            document.getElementById('viewTree').classList.add('hidden');
+            document.getElementById('viewMinified').classList.add('hidden');
+            
+            // Reset tab styles
+            document.getElementById('tabFormatted').classList.remove('tab-active');
+            document.getElementById('tabFormatted').classList.add('tab-inactive');
+            document.getElementById('tabTree').classList.remove('tab-active');
+            document.getElementById('tabTree').classList.add('tab-inactive');
+            document.getElementById('tabMinified').classList.remove('tab-active');
+            document.getElementById('tabMinified').classList.add('tab-inactive');
+            
+            // Show selected view
+            document.getElementById(`view${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('hidden');
+            document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.remove('tab-inactive');
+            document.getElementById(`tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('tab-active');
+        }
+
+        function copyOutput() {
+            let content;
+            if (currentTab === 'formatted') {
+                content = document.getElementById('formattedOutput').textContent;
+            } else if (currentTab === 'minified') {
+                content = document.getElementById('minifiedOutput').textContent;
+            } else {
+                content = JSON.stringify(currentJSON, null, 2);
+            }
+            
+            navigator.clipboard.writeText(content);
+            
+            const btn = event.target.closest('button');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+            setTimeout(() => btn.innerHTML = original, 1500);
+        }
+
+        function downloadJSON() {
+            if (!currentJSON) return;
+            
+            const content = currentTab === 'minified' 
+                ? JSON.stringify(currentJSON) 
+                : JSON.stringify(currentJSON, null, 2);
+            
+            const blob = new Blob([content], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'formatted.json';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function clearInput() {
+            jsonInput.value = '';
+            updateInputStats();
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('statusBar').classList.add('hidden');
+            document.getElementById('formattedOutput').innerHTML = '';
+            document.getElementById('treeOutput').innerHTML = '';
+            document.getElementById('minifiedOutput').textContent = '';
+            currentJSON = null;
+            localStorage.removeItem('jsonFormatterInput');
+        }
+
+        function loadSample() {
+            const sample = {
+                "name": "John Doe",
+                "email": "john@example.com",
+                "age": 30,
+                "isActive": true,
+                "balance": 1234.56,
+                "address": {
+                    "street": "123 Main St",
+                    "city": "New York",
+                    "zip": "10001",
+                    "coordinates": {
+                        "lat": 40.7128,
+                        "lng": -74.0060
+                    }
+                },
+                "tags": ["developer", "blogger", "traveler"],
+                "metadata": {
+                    "created": "2024-01-15T10:30:00Z",
+                    "lastLogin": null,
+                    "preferences": {
+                        "theme": "dark",
+                        "notifications": true
+                    }
+                }
+            };
+            jsonInput.value = JSON.stringify(sample, null, 2);
+            updateInputStats();
+            formatJSON();
+        }
+
+        // Load saved input
+        const savedInput = localStorage.getItem('jsonFormatterInput');
+        if (savedInput) {
+            jsonInput.value = savedInput;
+            updateInputStats();
+            formatJSON();
+        }
+    </script>
+</body>
+</html>

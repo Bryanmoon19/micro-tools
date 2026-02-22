@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unix Timestamp Converter | Epoch to Date Online</title>
+    <meta name="description" content="Free Unix timestamp converter. Convert between epoch time and human-readable dates instantly. Supports milliseconds and seconds. 100% client-side.">
+    <meta name="keywords" content="unix timestamp converter, epoch converter, timestamp to date, unix time, epoch time converter, timestamp online">
+    <meta name="author" content="Micro Tools">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Unix Timestamp Converter | Epoch to Date">
+    <meta property="og:description" content="Convert Unix timestamps to dates instantly. Free online tool.">
+    <link rel="canonical" href="https://timestamp-converter.netlify.app/">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#06b6d4',
+                        'primary-dark': '#0891b2',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .clock-digit { font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
+    <!-- Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+        <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                    ⏱
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-gray-900 dark:text-white">Timestamp Converter</h1>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">Unix Epoch to Date</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <span class="hidden sm:flex items-center gap-2 text-xs text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 py-1.5 rounded-full">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+                    Client-side only
+                </span>
+                <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                    <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-8">
+        <!-- Live Clock -->
+        <section class="mb-8 bg-gradient-to-r from-primary to-primary-dark rounded-xl p-6 text-white">
+            <div class="text-center">
+                <p class="text-cyan-100 text-sm mb-2">Current Unix Timestamp</p>
+                <div class="flex items-center justify-center gap-4 flex-wrap">
+                    <code id="liveTimestamp" class="mono text-4xl font-bold clock-digit">0</code>
+                    <button onclick="copyCurrentTimestamp()" class="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors" title="Copy timestamp">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                    </button>
+                </div>
+                <p id="liveDate" class="text-cyan-100 mt-2 text-sm">Loading...</p>
+            </div>
+        </section>
+
+        <!-- Converter -->
+        <div class="grid md:grid-cols-2 gap-6">
+            <!-- Timestamp to Date -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Timestamp to Date
+                    </span>
+                </div>
+                <div class="p-4">
+                    <div class="mb-4">
+                        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Unix Timestamp</label>
+                        <div class="flex gap-2">
+                            <input type="text" id="timestampInput" placeholder="1700000000" 
+                                class="flex-1 mono p-3 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:text-white">
+                            <select id="timestampUnit" class="p-3 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg dark:text-white">
+                                <option value="seconds">Seconds</option>
+                                <option value="milliseconds">Milliseconds</option>
+                            </select>
+                        </div>
+                        <div class="flex gap-2 mt-2">
+                            <button onclick="setNow()" class="text-xs text-primary hover:text-primary-dark">Now</button>
+                            <button onclick="clearTimestamp()" class="text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400">Clear</button>
+                        </div>
+                    </div>
+
+                    <div id="dateResults" class="hidden space-y-3">
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Local Time</p>
+                                    <p id="localTime" class="text-sm font-medium text-gray-900 dark:text-white mt-1"></p>
+                                </div>
+                                <button onclick="copyResult('localTime')" class="text-xs text-primary hover:text-primary-dark">Copy</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">UTC</p>
+                                    <p id="utcTime" class="text-sm font-medium text-gray-900 dark:text-white mt-1 mono"></p>
+                                </div>
+                                <button onclick="copyResult('utcTime')" class="text-xs text-primary hover:text-primary-dark">Copy</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">ISO 8601</p>
+                                    <p id="isoTime" class="text-sm font-medium text-gray-900 dark:text-white mt-1 mono"></p>
+                                </div>
+                                <button onclick="copyResult('isoTime')" class="text-xs text-primary hover:text-primary-dark">Copy</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Relative</p>
+                                    <p id="relativeTime" class="text-sm font-medium text-gray-900 dark:text-white mt-1"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Date to Timestamp -->
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div class="bg-gray-100 dark:bg-gray-750 px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+                    <span class="text-sm font-semibold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Date to Timestamp
+                    </span>
+                </div>
+                <div class="p-4">
+                    <div class="mb-4">
+                        <label class="block text-xs text-gray-500 dark:text-gray-400 mb-1">Select Date & Time</label>
+                        <input type="datetime-local" id="dateInput" 
+                            class="w-full p-3 text-sm bg-gray-50 dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary dark:text-white">
+                    </div>
+
+                    <div id="timestampResults" class="hidden space-y-3">
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Seconds</p>
+                                    <p id="tsSeconds" class="text-lg font-bold text-primary mono mt-1"></p>
+                                </div>
+                                <button onclick="copyResult('tsSeconds')" class="text-xs text-primary hover:text-primary-dark">Copy</button>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">Milliseconds</p>
+                                    <p id="tsMilliseconds" class="text-lg font-bold text-primary mono mt-1"></p>
+                                </div>
+                                <button onclick="copyResult('tsMilliseconds')" class="text-xs text-primary hover:text-primary-dark">Copy</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Quick Reference -->
+        <section class="mt-8 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+            <h3 class="font-semibold text-gray-900 dark:text-white mb-4">Quick Reference</h3>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <p class="text-gray-500 dark:text-gray-400">1 minute</p>
+                    <p class="mono text-gray-900 dark:text-white">60 seconds</p>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <p class="text-gray-500 dark:text-gray-400">1 hour</p>
+                    <p class="mono text-gray-900 dark:text-white">3,600 seconds</p>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <p class="text-gray-500 dark:text-gray-400">1 day</p>
+                    <p class="mono text-gray-900 dark:text-white">86,400 seconds</p>
+                </div>
+                <div class="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
+                    <p class="text-gray-500 dark:text-gray-400">30 days</p>
+                    <p class="mono text-gray-900 dark:text-white">2,592,000 seconds</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Related Tools -->
+        <section class="mt-12">
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <a href="../jwt-debugger/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">JWT</div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">JWT Debugger</h4>
+                    </div>
+                </a>
+                <a href="../base64-converter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-sm">B64</div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">Base64 Converter</h4>
+                    </div>
+                </a>
+                <a href="../json-formatter/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 hover:shadow-md transition-shadow">
+                    <div class="w-10 h-10 bg-amber-100 dark:bg-amber-900/30 rounded-lg flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-sm">{}</div>
+                    <div>
+                        <h4 class="font-medium text-gray-900 dark:text-white text-sm">JSON Formatter</h4>
+                    </div>
+                </a>
+                <div class="bg-gray-100 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-3 opacity-60">
+                    <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/30 rounded-lg flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-sm">🔒</div>
+                    <div>
+                        <h4 class="font-medium text-gray-700 dark:text-gray-300 text-sm">Password Generator</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="max-w-6xl mx-auto px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400 border-t border-gray-200 dark:border-gray-800 mt-8">
+        <p>Unix Timestamp Converter — Epoch to date conversion</p>
+        <p class="mt-1 text-xs">Part of the <a href="../" class="text-primary hover:underline">Micro Tools</a> network.</p>
+    </footer>
+
+    <script>
+        // Theme
+        const themeToggle = document.getElementById('themeToggle');
+        const sunIcon = document.getElementById('sunIcon');
+        const moonIcon = document.getElementById('moonIcon');
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            sunIcon.classList.remove('hidden');
+            moonIcon.classList.add('hidden');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            sunIcon.classList.toggle('hidden');
+            moonIcon.classList.toggle('hidden');
+        });
+
+        // Live clock
+        function updateClock() {
+            const now = Math.floor(Date.now() / 1000);
+            document.getElementById('liveTimestamp').textContent = now;
+            document.getElementById('liveDate').textContent = new Date().toLocaleString();
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function copyCurrentTimestamp() {
+            navigator.clipboard.writeText(document.getElementById('liveTimestamp').textContent);
+        }
+
+        // Timestamp to Date
+        const timestampInput = document.getElementById('timestampInput');
+        const timestampUnit = document.getElementById('timestampUnit');
+
+        timestampInput.addEventListener('input', convertTimestamp);
+        timestampUnit.addEventListener('change', convertTimestamp);
+
+        function convertTimestamp() {
+            const value = timestampInput.value.trim();
+            if (!value) {
+                document.getElementById('dateResults').classList.add('hidden');
+                return;
+            }
+
+            let timestamp = parseInt(value);
+            if (isNaN(timestamp)) return;
+
+            if (timestampUnit.value === 'seconds') {
+                timestamp *= 1000;
+            }
+
+            const date = new Date(timestamp);
+            if (isNaN(date.getTime())) return;
+
+            document.getElementById('dateResults').classList.remove('hidden');
+            document.getElementById('localTime').textContent = date.toLocaleString();
+            document.getElementById('utcTime').textContent = date.toUTCString();
+            document.getElementById('isoTime').textContent = date.toISOString();
+            document.getElementById('relativeTime').textContent = getRelativeTime(date);
+        }
+
+        function getRelativeTime(date) {
+            const now = new Date();
+            const diff = date - now;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
+
+            if (Math.abs(days) > 365) {
+                const years = Math.floor(Math.abs(days) / 365);
+                return diff > 0 ? `in ${years} year${years > 1 ? 's' : ''}` : `${years} year${years > 1 ? 's' : ''} ago`;
+            }
+            if (Math.abs(days) > 0) return diff > 0 ? `in ${Math.abs(days)} day${Math.abs(days) > 1 ? 's' : ''}` : `${Math.abs(days)} day${Math.abs(days) > 1 ? 's' : ''} ago`;
+            if (Math.abs(hours) > 0) return diff > 0 ? `in ${Math.abs(hours)} hour${Math.abs(hours) > 1 ? 's' : ''}` : `${Math.abs(hours)} hour${Math.abs(hours) > 1 ? 's' : ''} ago`;
+            if (Math.abs(minutes) > 0) return diff > 0 ? `in ${Math.abs(minutes)} minute${Math.abs(minutes) > 1 ? 's' : ''}` : `${Math.abs(minutes)} minute${Math.abs(minutes) > 1 ? 's' : ''} ago`;
+            return diff > 0 ? `in ${Math.abs(seconds)} second${Math.abs(seconds) !== 1 ? 's' : ''}` : `${Math.abs(seconds)} second${Math.abs(seconds) !== 1 ? 's' : ''} ago`;
+        }
+
+        function setNow() {
+            timestampInput.value = Math.floor(Date.now() / 1000);
+            timestampUnit.value = 'seconds';
+            convertTimestamp();
+        }
+
+        function clearTimestamp() {
+            timestampInput.value = '';
+            document.getElementById('dateResults').classList.add('hidden');
+        }
+
+        // Date to Timestamp
+        const dateInput = document.getElementById('dateInput');
+        dateInput.addEventListener('input', convertDate);
+
+        function convertDate() {
+            const value = dateInput.value;
+            if (!value) {
+                document.getElementById('timestampResults').classList.add('hidden');
+                return;
+            }
+
+            const date = new Date(value);
+            if (isNaN(date.getTime())) return;
+
+            document.getElementById('timestampResults').classList.remove('hidden');
+            document.getElementById('tsSeconds').textContent = Math.floor(date.getTime() / 1000);
+            document.getElementById('tsMilliseconds').textContent = date.getTime();
+        }
+
+        function copyResult(id) {
+            navigator.clipboard.writeText(document.getElementById(id).textContent);
+        }
+    </script>
+</body>
+</html>
