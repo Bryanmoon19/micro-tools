@@ -484,7 +484,8 @@
             { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400' },
             { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400' }
         ];
-        const currentTool = window.location.pathname.split('/').filter(Boolean).pop();
+        const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
+        const currentTool = pathParts[pathParts.length - 1] || '';
         const relatedEl = document.getElementById('relatedTools');
         if (relatedEl) {
             relatedEl.innerHTML = allTools
