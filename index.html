@@ -20,294 +20,329 @@
         gtag('js', new Date());
         gtag('config', 'G-BQXTZYP8H4');
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#6366f1',
-                    },
-                    animation: {
-                        'fade-in': 'fadeIn 0.5s ease-out',
-                    },
-                    keyframes: {
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
-                        }
-                    }
-                }
-            }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
         }
     </script>
+    <link rel="stylesheet" href="apple-redesign.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        .hidden { display: none; }
+        .hub-shell {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .hub-header {
+            padding: 22px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand {
+            font-size: 23px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+        .hero {
+            padding: 96px 0 80px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: clamp(48px, 6vw, 56px);
+            font-weight: 300;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin: 0;
+        }
+        .hero p {
+            max-width: 720px;
+            margin: 24px auto 0;
+            font-size: 21px;
+            line-height: 1.4;
+            color: var(--text-secondary);
+        }
+        .tool-section {
+            padding: 0 0 80px;
+        }
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+        .tool-card {
+            text-decoration: none;
+            padding: 28px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+        .tool-card:hover {
+            transform: translateY(-2px) scale(1.02);
+        }
+        .tool-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: rgba(0, 113, 227, 0.12);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+        .tool-card h2 {
+            margin: 20px 0 10px;
+            font-size: 24px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+        .tool-card p {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        .tool-link {
+            margin-top: 18px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-size: 15px;
+            font-weight: 500;
+        }
+        .privacy {
+            padding: 0 0 96px;
+        }
+        .privacy-wrap {
+            padding: 36px;
+        }
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 24px;
+        }
+        .privacy-item {
+            padding: 20px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.42);
+        }
+        .dark .privacy-item {
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .privacy-item h3 {
+            margin: 0 0 8px;
+            font-size: 21px;
+            font-weight: 600;
+        }
+        .privacy-item p {
+            margin: 0;
+            font-size: 17px;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+        .privacy-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            background: rgba(0, 113, 227, 0.15);
+            color: var(--accent);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .footer {
+            padding: 24px 0 56px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .footer a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        @media (max-width: 1024px) {
+            .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .privacy-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 700px) {
+            .hub-shell { padding: 0 16px; }
+            .hero { padding: 72px 0 56px; }
+            .hero p { font-size: 18px; }
+            .tool-grid { grid-template-columns: 1fr; gap: 16px; }
+            .privacy-wrap { padding: 22px; }
+        }
     </style>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
-    <!-- Header -->
-    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl shadow-lg">
-                    🔧
-                </div>
-                <div>
-                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Micro Tools</h1>
-                </div>
-            </div>
-            <button id="themeToggle" class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                <svg id="moonIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+<body>
+    <header>
+        <div class="hub-shell hub-header">
+            <div class="brand">devhandbook</div>
+            <button id="themeToggle" aria-label="Toggle dark mode">
+                <svg id="sunIcon" class="w-5 h-5 hidden" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0"/></svg>
+                <svg id="moonIcon" class="w-5 h-5" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             </button>
         </div>
     </header>
 
-    <!-- Hero -->
-    <section class="bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 py-16">
-        <div class="max-w-4xl mx-auto px-4 text-center animate-fade-in">
-            <h2 class="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                Developer Tools That
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-600">Respect Your Privacy</span>
-            </h2>
-            
-            <p class="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-                Simple, fast utilities that run <strong>100% in your browser</strong>. 
-                No data collection. No tracking. No servers.
-            </p>
-            
-            <div class="flex flex-wrap justify-center gap-3 text-sm">
-                <span class="px-4 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full font-medium">⚡ Instant</span>
-                <span class="px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full font-medium">🔒 Private</span>
-                <span class="px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 rounded-full font-medium">📱 Mobile-friendly</span>
-                <span class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full font-medium">🌙 Dark mode</span>
+    <main class="hub-shell">
+        <section class="hero fade-in">
+            <h1>Developer tools, refined.</h1>
+            <p>Fast utilities for modern workflows. Private by design, client-side by default, and built to stay out of your way.</p>
+        </section>
+
+        <section class="tool-section fade-in">
+            <div class="tool-grid">
+                <a href="json-formatter/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">JSON</span>
+                        <h2>JSON Formatter</h2>
+                        <p>Pretty print, validate, minify, and inspect JSON with structured output.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="jwt-debugger/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">JWT</span>
+                        <h2>JWT Debugger</h2>
+                        <p>Decode token headers and payloads instantly with expiration awareness.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="base64-converter/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">B64</span>
+                        <h2>Base64 Converter</h2>
+                        <p>Encode and decode text or files with URL-safe support when needed.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="timestamp-converter/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">TIME</span>
+                        <h2>Timestamp Converter</h2>
+                        <p>Convert Unix timestamps and human-readable dates with live updates.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="password-generator/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">PASS</span>
+                        <h2>Password Generator</h2>
+                        <p>Create strong random passwords with configurable complexity controls.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="url-encoder/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">URL</span>
+                        <h2>URL Encoder / Decoder</h2>
+                        <p>Encode or decode full URLs and individual URI components cleanly.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="regex-tester/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">REGX</span>
+                        <h2>Regex Tester</h2>
+                        <p>Test patterns in real time with group matching and clear highlights.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="html-entities/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">HTML</span>
+                        <h2>HTML Entities</h2>
+                        <p>Convert special characters to entities and decode them back instantly.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="color-converter/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">CLR</span>
+                        <h2>Color Converter</h2>
+                        <p>Switch between HEX, RGB, and HSL with instant color preview.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="cron-generator/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">CRON</span>
+                        <h2>Cron Generator</h2>
+                        <p>Build cron expressions visually and validate schedules quickly.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
+                <a href="pdf-tools/" class="tool-card">
+                    <div>
+                        <span class="tool-icon">PDF</span>
+                        <h2>PDF Tool Suite</h2>
+                        <p>Merge, split, compress, and protect PDFs directly in browser.</p>
+                    </div>
+                    <span class="tool-link">Open tool →</span>
+                </a>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Tools Grid -->
-    <main class="max-w-6xl mx-auto px-4 py-12">
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">All Tools</h3>
-        
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- JWT Debugger -->
-            <a href="jwt-debugger/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-lg group-hover:scale-110 transition-transform">JWT</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">JWT Debugger</h2>
+        <section class="privacy fade-in">
+            <div class="privacy-wrap tool-card">
+                <div class="privacy-grid">
+                    <article class="privacy-item">
+                        <div class="privacy-icon">P</div>
+                        <h3>Private by design</h3>
+                        <p>Your files and data stay on your device. Nothing is uploaded.</p>
+                    </article>
+                    <article class="privacy-item">
+                        <div class="privacy-icon">I</div>
+                        <h3>Instant</h3>
+                        <p>No upload queues or API waits. Everything runs right away.</p>
+                    </article>
+                    <article class="privacy-item">
+                        <div class="privacy-icon">O</div>
+                        <h3>Works offline</h3>
+                        <p>After first load, tools continue to work without a network.</p>
+                    </article>
                 </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Decode JSON Web Tokens. View header, payload, signature with expiration checking.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <!-- Base64 Converter -->
-            <a href="base64-converter/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 font-bold text-lg group-hover:scale-110 transition-transform">B64</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Base64 Converter</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Encode and decode Base64. Text, files, and images. URL-safe option.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <!-- JSON Formatter -->
-            <a href="json-formatter/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900/30 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold text-lg group-hover:scale-110 transition-transform">{}</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">JSON Formatter</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Pretty print, validate, minify JSON. Syntax highlighting and tree view.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <!-- PDF Tool Suite -->
-            <a href="pdf-tools/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-teal-100 dark:bg-teal-900/30 rounded-xl flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold text-base group-hover:scale-110 transition-transform">PDF</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">PDF Tool Suite</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Merge, split, compress, and protect PDF files fully in your browser.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <!-- Timestamp Converter -->
-            <a href="timestamp-converter/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 rounded-xl flex items-center justify-center text-cyan-600 dark:text-cyan-400 text-2xl group-hover:scale-110 transition-transform">⏱</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Timestamp Converter</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Unix timestamps to dates. Live clock with 1-second updates.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <!-- Password Generator -->
-            <a href="password-generator/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 text-2xl group-hover:scale-110 transition-transform">🔒</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Password Generator</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Crypto-secure passwords. Strength meter. Customizable length.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <a href="url-encoder/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-sky-100 dark:bg-sky-900 rounded-xl flex items-center justify-center text-sky-600 dark:text-sky-400 text-2xl group-hover:scale-110 transition-transform">🔗</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">URL Encoder / Decoder</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Percent-encode and decode URLs. Component and full URI modes.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-        
-            <a href="regex-tester/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-violet-100 dark:bg-violet-900 rounded-xl flex items-center justify-center text-violet-600 dark:text-violet-400 text-2xl group-hover:scale-110 transition-transform">/re/</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Regex Tester</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Debug regular expressions. Real-time highlighting and group matching.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <a href="html-entities/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-pink-100 dark:bg-pink-900 rounded-xl flex items-center justify-center text-pink-600 dark:text-pink-400 text-2xl group-hover:scale-110 transition-transform">&lt;/&gt;</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">HTML Entities</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Encode and decode HTML character entities. Quick reference guide.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <a href="color-converter/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-amber-100 dark:bg-amber-900 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400 text-2xl group-hover:scale-110 transition-transform">🎨</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Color Converter</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Convert HEX, RGB, and HSL. Live color preview and picker.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-
-            <a href="cron-generator/" class="group bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-primary/50 transition-all duration-300">
-                <div class="flex items-center gap-4 mb-4">
-                    <div class="w-12 h-12 bg-emerald-100 dark:bg-emerald-900 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 text-2xl group-hover:scale-110 transition-transform">cron</div>
-                    <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Cron Generator</h2>
-                </div>
-                <p class="text-gray-600 dark:text-gray-400 mb-4">Build cron expressions visually and get plain English explanations.</p>
-                <span class="inline-flex items-center text-primary font-medium">
-                    Open Tool 
-                    <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                </span>
-            </a>
-</div>
+            </div>
+        </section>
     </main>
 
-    <!-- Why Choose Us -->
-    <section class="bg-white dark:bg-gray-800 border-y border-gray-200 dark:border-gray-700 py-16">
-        <div class="max-w-6xl mx-auto px-4">
-            <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-12 text-center">Why Developers Choose Micro Tools</h3>
-            
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                    </div>
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">100% Private</h4>
-                    <p class="text-gray-600 dark:text-gray-400">Your data never leaves your browser. No tracking, no cookies, no servers.</p>
-                </div>
-
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    </div>
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Lightning Fast</h4>
-                    <p class="text-gray-600 dark:text-gray-400">No server round-trips. Tools load instantly and work offline.</p>
-                </div>
-
-                <div class="text-center">
-                    <div class="w-16 h-16 bg-purple-100 dark:bg-purple-900/30 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                        <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
-                    </div>
-                    <h4 class="font-semibold text-gray-900 dark:text-white mb-2">Always Free</h4>
-                    <p class="text-gray-600 dark:text-gray-400">No signups, no paywalls, no limits. Open source and always will be.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Suggest a Tool -->
-    <section class="max-w-2xl mx-auto px-4 py-16 text-center">
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">Need Another Tool?</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">We're always adding new utilities. Let us know what you'd like to see.</p>
-        
-        <a href="https://github.com/bryanmoon19/micro-tools/issues/new" target="_blank" 
-           class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-lg font-medium hover:opacity-90 transition-opacity">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd"/></svg>
-            Suggest a Tool on GitHub
-        </a>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-gray-50 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 py-8">
-            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div class="text-center md:text-left">
-                    <p class="text-gray-900 dark:text-white font-medium">devhandbook.io</p>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Free developer utilities. 100% client-side.</p>
-                </div>
-                <p class="text-xs text-gray-400 dark:text-gray-600">© 2026 devhandbook.io · No data collected · No signups required</p>
-            </div>
-        </div>
+    <footer class="hub-shell footer">
+        <p>© 2026 devhandbook.io</p>
+        <p><a href="/sitemap.xml">Sitemap</a></p>
     </footer>
 
     <script>
-        // Theme toggle
         const themeToggle = document.getElementById('themeToggle');
         const sunIcon = document.getElementById('sunIcon');
         const moonIcon = document.getElementById('moonIcon');
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-            sunIcon.classList.remove('hidden');
-            moonIcon.classList.add('hidden');
+        function updateThemeIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
         }
+
+        updateThemeIcons();
 
         themeToggle.addEventListener('click', () => {
             document.documentElement.classList.toggle('dark');
             localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-            sunIcon.classList.toggle('hidden');
-            moonIcon.classList.toggle('hidden');
+            updateThemeIcons();
         });
     </script>
 </body>

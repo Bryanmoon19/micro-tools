@@ -20,9 +20,6 @@
     <meta property="og:description" content="Free Base64 encoder and decoder. Convert text and files instantly. 100% client-side.">
     <meta property="og:type" content="website">
     <link rel="canonical" href="https://devhandbook.io/base64-converter/">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -30,8 +27,8 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+                        sans: ['-apple-system', 'BlinkMacSystemFont', 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
+                        mono: ['SF Mono', 'Fira Code', 'JetBrains Mono', 'monospace'],
                     },
                     colors: {
                         primary: '#10b981',
@@ -42,6 +39,7 @@
             }
         }
     </script>
+    <link rel="stylesheet" href="../apple-redesign.css">
     <style>
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
