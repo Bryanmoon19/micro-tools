@@ -49,7 +49,61 @@
         .dark .json-string { color: #34d399; }
         .dark .json-number { color: #f87171; }
         .dark .json-boolean { color: #a78bfa; }
-    </style>
+    
+/* Related Tools - Apple Style */
+.related-tool-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    background: var(--surface, rgba(255,255,255,0.82));
+    border: 1px solid var(--glass-border, rgba(255,255,255,0.45));
+    border-radius: 16px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    text-decoration: none;
+    transition: transform 0.28s cubic-bezier(0.25,0.1,0.25,1), box-shadow 0.28s cubic-bezier(0.25,0.1,0.25,1);
+}
+.related-tool-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06);
+}
+html.dark .related-tool-card {
+    background: rgba(28,28,30,0.9);
+    border-color: rgba(255,255,255,0.1);
+}
+.related-tool-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(0,113,227,0.1);
+    color: #0071e3;
+    border-radius: 12px;
+    display: flex;
+    align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: -0.01em;
+    flex-shrink: 0;
+}
+html.dark .related-tool-icon {
+    background: rgba(41,151,255,0.12);
+    color: #2997ff;
+}
+.related-tool-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary, #1d1d1f);
+    letter-spacing: -0.01em;
+}
+html.dark .related-tool-card h3 { color: #f5f5f7; }
+.related-tool-card p {
+    font-size: 13px;
+    color: var(--text-secondary, #6e6e73);
+    margin-top: 2px;
+}
+html.dark .related-tool-card p { color: #98989d; }
+</style>
     <script>
         // Apply dark mode BEFORE page renders to prevent flash
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -58,7 +112,7 @@
     </script>
 </head>
     <!-- Tailwind safelist (hidden, ensures CSS is generated for dynamic content) -->
-    <div class="hidden bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400 bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400 bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400 bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400 bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400"></div>
+    
 <body class="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
     <!-- Header -->
     <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
@@ -203,15 +257,15 @@
         </div>
 
         <!-- Unix Timestamp Widget -->
-        <section class="mt-8 bg-gradient-to-r from-primary to-primary-dark rounded-xl p-6 text-white">
+        <section class="mt-8 p-6 mb-8 shadow-sm" style="background: var(--accent-dim); border: 1px solid rgba(0,113,227,0.12); border-radius: 16px;">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div>
-                    <h3 class="font-semibold">Current Unix Timestamp</h3>
-                    <p class="text-sm text-indigo-200">Useful for JWT exp/iat claims</p>
+                    <h3 class="font-semibold" style="color: var(--text-primary)">Current Unix Timestamp</h3>
+                    <p class="text-sm text-indigo-200" style="color: var(--text-secondary)">Useful for JWT exp/iat claims</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <code id="unixTimestamp" class="mono text-lg bg-white/20 px-4 py-2 rounded-lg"></code>
-                    <button onclick="copyUnixTimestamp()" class="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors" title="Copy timestamp">
+                    <code id="unixTimestamp" class="mono text-lg px-4 py-2 rounded-lg" style="color: var(--accent); background: rgba(0,113,227,0.05)"></code>
+                    <button onclick="copyUnixTimestamp()" class="p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg transition-colors" title="Copy timestamp" style="color: var(--accent)">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
                         </svg>
@@ -222,7 +276,7 @@
 
         <!-- Related Tools -->
         <section class="mt-12">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Related Tools</h2>
+            <h2 class="text-xl font-semibold mb-6" style="letter-spacing:-0.02em; color:var(--text-primary, #1d1d1f)">Related Tools</h2>
             <div id="relatedTools" class="grid sm:grid-cols-2 gap-4"></div>
         </section>
     </main>
@@ -421,31 +475,34 @@
     
         // Dynamic Related Tools
         const allTools = [
-            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode & Inspect Tokens', icon: 'JWT', colors: 'bg-indigo-100 dark:bg-indigo-900 text-indigo-600 dark:text-indigo-400' },
-            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode & Decode Base64', icon: 'B64', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' },
-            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty Print & Validate', icon: '{}', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
-            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix ↔ Date Conversion', icon: '⏱', colors: 'bg-rose-100 dark:bg-rose-900 text-rose-600 dark:text-rose-400' },
-            { id: 'password-generator', name: 'Password Generator', desc: 'Secure Password Creation', icon: '🔑', colors: 'bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-400' },
-            { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-Encode & Decode', icon: 'URL', colors: 'bg-sky-100 dark:bg-sky-900 text-sky-600 dark:text-sky-400' },
-            { id: 'regex-tester', name: 'Regex Tester', desc: 'Regular Expression Debugger', icon: '/re/', colors: 'bg-violet-100 dark:bg-violet-900 text-violet-600 dark:text-violet-400' },
-            { id: 'html-entities', name: 'HTML Entities', desc: 'Encode & Decode Entities', icon: '&lt;&gt;', colors: 'bg-pink-100 dark:bg-pink-900 text-pink-600 dark:text-pink-400' },
-            { id: 'color-converter', name: 'Color Converter', desc: 'HEX ↔ RGB ↔ HSL', icon: '🎨', colors: 'bg-amber-100 dark:bg-amber-900 text-amber-600 dark:text-amber-400' },
-            { id: 'cron-generator', name: 'Cron Generator', desc: 'Build & Explain Cron Jobs', icon: 'cron', colors: 'bg-emerald-100 dark:bg-emerald-900 text-emerald-600 dark:text-emerald-400' }];
+    { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty print, validate, and inspect JSON', icon: '{ }' },
+    { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode headers and payloads instantly', icon: 'JWT' },
+    { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode and decode with URL-safe support', icon: 'B64' },
+    { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix timestamps and human dates', icon: 'TIME' },
+    { id: 'password-generator', name: 'Password Generator', desc: 'Strong passwords with complexity controls', icon: 'PASS' },
+    { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-encode and decode URLs', icon: 'URL' },
+    { id: 'regex-tester', name: 'Regex Tester', desc: 'Test patterns with group matching', icon: 'REGX' },
+    { id: 'html-entities', name: 'HTML Entities', desc: 'Convert and decode HTML entities', icon: 'HTML' },
+    { id: 'color-converter', name: 'Color Converter', desc: 'Switch between HEX, RGB, and HSL', icon: 'CLR' },
+    { id: 'cron-generator', name: 'Cron Generator', desc: 'Build and validate cron expressions', icon: 'CRON' },
+    { id: 'pdf-tools', name: 'PDF Tool Suite', desc: 'Merge, split, compress, and protect PDFs', icon: 'PDF' }
+];
         const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
         const currentTool = pathParts[pathParts.length - 1] || '';
         const relatedEl = document.getElementById('relatedTools');
         if (relatedEl) {
             relatedEl.innerHTML = allTools
-                .filter(t => t.id !== currentTool)
-                .map(t => `
-                    <a href="../${t.id}/" class="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex items-center gap-4 hover:shadow-md transition-shadow">
-                        <div class="w-12 h-12 ${t.colors} rounded-lg flex items-center justify-center font-bold text-lg">${t.icon}</div>
-                        <div>
-                            <h3 class="font-medium text-gray-900 dark:text-white">${t.name}</h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">${t.desc}</p>
-                        </div>
-                    </a>
-                `).join('');
+    .filter(t => t.id !== currentTool)
+    .slice(0, 4)
+    .map(t => `
+        <a href="../${t.id}/" class="related-tool-card">
+            <div class="related-tool-icon">${t.icon}</div>
+            <div>
+                <h3>${t.name}</h3>
+                <p>${t.desc}</p>
+            </div>
+        </a>
+    `).join('');
         }
 
     </script>
