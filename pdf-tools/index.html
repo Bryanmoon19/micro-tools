@@ -42,22 +42,14 @@
         .mono { font-family: 'SF Mono', 'Fira Code', 'JetBrains Mono', monospace; }
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-active { border-bottom: 2px solid #14b8a6; color: #14b8a6; }
-        .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
-        .tab-inactive:hover { color: #374151; }
-        .dark .tab-inactive { color: #9ca3af; }
-        .dark .tab-inactive:hover { color: #d1d5db; }
-        .drop-zone-active { border-color: #14b8a6 !important; background: rgba(20, 184, 166, 0.08); }
+        .tab-active { border-bottom: 2px solid var(--accent) !important; color: var(--accent) !important; font-weight: 500; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: var(--text-secondary, #6e6e73); }
+        .tab-inactive:hover { color: var(--text-primary, #1d1d1f); }
+        
+        
+        .drop-zone-active { border-color: var(--accent) !important; background: var(--accent-dim); }
         .drag-item { cursor: grab; }
-        .drag-item:active { cursor: grabbing; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f3f4f6; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-        .dark ::-webkit-scrollbar-track { background: #1f2937; }
-        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-    </style>
+        .drag-item:active { cursor: grabbing; }</style>
     <script>
         // Apply dark mode BEFORE page renders to prevent flash
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -82,8 +74,8 @@
                     <span class="hidden sm:inline">All Tools</span>
                 </a>
 
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                    PDF
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white" style="background:var(--accent);border-radius:12px;flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-gray-900 dark:text-white">PDF Tool Suite</h1>

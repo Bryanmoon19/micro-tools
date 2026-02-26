@@ -61,19 +61,9 @@
         .tree-expanded .tree-toggle::before { content: '▼'; font-size: 10px; }
         .fade-in { animation: fadeIn 0.3s ease-in; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .tab-active { border-bottom: 2px solid #f59e0b; color: #f59e0b; }
-        .tab-inactive { border-bottom: 2px solid transparent; color: #6b7280; }
-        .tab-inactive:hover { color: #374151; }
-        .dark .tab-inactive { color: #9ca3af; }
-        .dark .tab-inactive:hover { color: #d1d5db; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: #f3f4f6; }
-        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
-        .dark ::-webkit-scrollbar-track { background: #1f2937; }
-        .dark ::-webkit-scrollbar-thumb { background: #4b5563; }
-        .dark ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
-    </style>
+        .tab-active { border-bottom: 2px solid var(--accent) !important; color: var(--accent) !important; font-weight: 500; }
+        .tab-inactive { border-bottom: 2px solid transparent; color: var(--text-secondary, #6e6e73); }
+        .tab-inactive:hover { color: var(--text-primary, #1d1d1f); }</style>
     <script>
         // Apply dark mode BEFORE page renders to prevent flash
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -95,8 +85,8 @@
                     <span class="hidden sm:inline">All Tools</span>
                 </a>
                 
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-lg flex items-center justify-center text-white font-bold text-lg">
-                    {}
+                <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white" style="background:var(--accent);border-radius:12px;flex-shrink:0;">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-gray-900 dark:text-white">JSON Formatter</h1>
@@ -122,7 +112,7 @@
         <div class="mb-6 bg-blue-50 dark:bg-blue-900 border border-blue-200 dark:border-blue-800 rounded-lg p-4 flex items-start gap-3">
             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
             <div>
-                <h3 class="font-semibold text-blue-900 dark:text-blue-300 text-sm">🔒 Your JSON Never Leaves Your Browser</h3>
+                <h3 class="font-semibold text-blue-900 dark:text-blue-300 text-sm">Your JSON Never Leaves Your Browser</h3>
                 <p class="text-sm text-blue-700 dark:text-blue-400 mt-1">All formatting happens locally in your browser. No data is sent to any server. Safe for sensitive JSON.</p>
             </div>
         </div>

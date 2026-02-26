@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free Developer Tools — devhandbook.io</title>
-    <meta name="description" content="Free, fast, privacy-focused developer tools. JSON formatter, JWT debugger, Base64 converter, Unix timestamp converter, and secure password generator. 100% client-side.")>
-    <meta name="keywords" content="developer tools, json formatter, jwt debugger, base64 converter, unix timestamp, password generator, online tools")>
-    <meta name="robots" content="index, follow")>
-    <meta property="og:title" content="Micro Tools — Free Developer Utilities")>
-    <meta property="og:description" content="Privacy-focused developer tools that run 100% in your browser. No data collection.")>
-    <meta property="og:type" content="website")>
+    <meta name="description" content="Free, fast, privacy-focused developer tools. JSON formatter, JWT debugger, Base64 converter, Unix timestamp converter, and secure password generator. 100% client-side.">
+    <meta name="keywords" content="developer tools, json formatter, jwt debugger, base64 converter, unix timestamp, password generator, online tools">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="devhandbook.io — Free Developer Tools">
+    <meta property="og:description" content="Privacy-focused developer tools that run 100% in your browser. No data collection.">
+    <meta property="og:type" content="website">
     <link rel="canonical" href="https://devhandbook.io/">
-    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml")>
+    <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-BQXTZYP8H4"></script>
     <script>
@@ -21,329 +21,624 @@
         gtag('config', 'G-BQXTZYP8H4');
     </script>
     <script>
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
+        (function() {
+            var d = document.documentElement;
+            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                d.classList.add('dark');
+            }
+        })();
     </script>
-    <link rel="stylesheet" href="apple-redesign.css">
     <style>
-        .hidden { display: none; }
-        .hub-shell {
-            max-width: 1200px;
+        /* ─── Reset & Tokens ─────────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg:           #fbfbfd;
+            --surface:      rgba(255,255,255,0.78);
+            --surface-mid:  rgba(255,255,255,0.6);
+            --text:         #1d1d1f;
+            --text-2:       #6e6e73;
+            --accent:       #0071e3;
+            --accent-hover: #0077ed;
+            --border:       rgba(0,0,0,0.07);
+            --glass-border: rgba(255,255,255,0.5);
+            --shadow:       0 2px 16px rgba(0,0,0,0.05), 0 1px 3px rgba(0,0,0,0.04);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.11), 0 2px 8px rgba(0,0,0,0.06);
+            --r-card:       20px;
+            --r-pill:       980px;
+            --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text',
+                    'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        html.dark {
+            --bg:           #000000;
+            --surface:      rgba(28,28,30,0.85);
+            --surface-mid:  rgba(44,44,46,0.7);
+            --text:         #f5f5f7;
+            --text-2:       #98989d;
+            --accent:       #2997ff;
+            --accent-hover: #4da8ff;
+            --border:       rgba(255,255,255,0.08);
+            --glass-border: rgba(255,255,255,0.1);
+            --shadow:       0 2px 16px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4);
+            --shadow-hover: 0 12px 40px rgba(0,0,0,0.7), 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        html, body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--font);
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            min-height: 100vh;
+        }
+
+        /* ─── Nav ─────────────────────────────────────────────────────── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(251,251,253,0.82);
+            border-bottom: 1px solid var(--border);
+        }
+        html.dark .nav {
+            background: rgba(0,0,0,0.82);
+        }
+        .nav-inner {
+            max-width: 1080px;
             margin: 0 auto;
             padding: 0 24px;
-        }
-        .hub-header {
-            padding: 22px 0;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
         .brand {
-            font-size: 23px;
+            font-size: 17px;
             font-weight: 600;
-            letter-spacing: -0.02em;
-            color: var(--text-primary);
+            letter-spacing: -0.025em;
+            color: var(--text);
         }
+        .theme-btn {
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            color: var(--text-2);
+            transition: background 0.2s, border-color 0.2s;
+        }
+        .theme-btn:hover { background: var(--surface-mid); }
+
+        /* ─── Wrapper ─────────────────────────────────────────────────── */
+        .wrap {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ─── Hero ────────────────────────────────────────────────────── */
         .hero {
-            padding: 96px 0 80px;
+            padding: 112px 0 80px;
             text-align: center;
         }
+        .hero-eyebrow {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
         .hero h1 {
-            font-size: clamp(48px, 6vw, 56px);
-            font-weight: 300;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            margin: 0;
+            font-size: clamp(52px, 7vw, 72px);
+            font-weight: 200;
+            letter-spacing: -0.03em;
+            line-height: 1.05;
+            color: var(--text);
         }
-        .hero p {
-            max-width: 720px;
+        .hero h1 strong {
+            font-weight: 600;
+        }
+        .hero-sub {
+            max-width: 600px;
             margin: 24px auto 0;
-            font-size: 21px;
-            line-height: 1.4;
-            color: var(--text-secondary);
+            font-size: 19px;
+            line-height: 1.5;
+            color: var(--text-2);
+            font-weight: 400;
         }
-        .tool-section {
-            padding: 0 0 80px;
+
+        /* ─── Tool Grid ───────────────────────────────────────────────── */
+        .tools-section {
+            padding: 0 0 100px;
         }
         .tool-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
         .tool-card {
+            position: relative;
             text-decoration: none;
-            padding: 28px;
-            min-height: 220px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            padding: 28px;
+            border-radius: var(--r-card);
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            transition: transform 0.3s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        box-shadow 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            overflow: hidden;
+        }
+        .tool-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: var(--r-card);
+            border: 1px solid rgba(255,255,255,0.4);
+            pointer-events: none;
+        }
+        html.dark .tool-card::after {
+            border-color: rgba(255,255,255,0.07);
         }
         .tool-card:hover {
-            transform: translateY(-2px) scale(1.02);
+            transform: translateY(-3px) scale(1.008);
+            box-shadow: var(--shadow-hover);
         }
+        .tool-card:active {
+            transform: translateY(-1px) scale(1.003);
+        }
+
         .tool-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 16px;
-            background: rgba(0, 113, 227, 0.12);
-            color: var(--accent);
-            display: inline-flex;
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(0,113,227,0.1);
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            color: var(--accent);
+            flex-shrink: 0;
         }
-        .tool-card h2 {
-            margin: 20px 0 10px;
-            font-size: 24px;
-            font-weight: 600;
-            line-height: 1.2;
-            color: var(--text-primary);
+        html.dark .tool-icon {
+            background: rgba(41,151,255,0.12);
         }
-        .tool-card p {
-            margin: 0;
-            font-size: 17px;
-            line-height: 1.5;
-            color: var(--text-secondary);
+        .tool-icon svg {
+            width: 22px;
+            height: 22px;
         }
-        .tool-link {
+        .tool-name {
             margin-top: 18px;
+            font-size: 19px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--text);
+        }
+        .tool-desc {
+            margin-top: 8px;
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-2);
+            flex: 1;
+        }
+        .tool-cta {
+            margin-top: 20px;
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            color: var(--accent);
-            font-size: 15px;
+            gap: 5px;
+            font-size: 14px;
             font-weight: 500;
+            color: var(--accent);
         }
+        .tool-cta svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s;
+        }
+        .tool-card:hover .tool-cta svg {
+            transform: translateX(3px);
+        }
+
+        /* ─── Privacy Section ─────────────────────────────────────────── */
         .privacy {
-            padding: 0 0 96px;
+            padding: 0 0 112px;
         }
-        .privacy-wrap {
-            padding: 36px;
+        .privacy-card {
+            border-radius: var(--r-card);
+            background: var(--surface);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            padding: 48px;
+        }
+        html.dark .privacy-card {
+            background: var(--surface);
+        }
+        .privacy-eyebrow {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+        .privacy-headline {
+            font-size: clamp(28px, 3.5vw, 36px);
+            font-weight: 600;
+            letter-spacing: -0.025em;
+            line-height: 1.15;
+            color: var(--text);
+            margin-bottom: 40px;
         }
         .privacy-grid {
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
         }
-        .privacy-item {
-            padding: 20px;
-            border-radius: 16px;
-            background: rgba(255, 255, 255, 0.42);
-        }
-        .dark .privacy-item {
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .privacy-item h3 {
-            margin: 0 0 8px;
-            font-size: 21px;
-            font-weight: 600;
-        }
-        .privacy-item p {
-            margin: 0;
-            font-size: 17px;
-            line-height: 1.5;
-            color: var(--text-secondary);
-        }
+        .privacy-item {}
         .privacy-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 999px;
-            background: rgba(0, 113, 227, 0.15);
-            color: var(--accent);
-            display: inline-flex;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: rgba(0,113,227,0.1);
+            display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 12px;
-            font-size: 16px;
-            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 14px;
         }
+        html.dark .privacy-icon {
+            background: rgba(41,151,255,0.12);
+        }
+        .privacy-icon svg {
+            width: 20px;
+            height: 20px;
+        }
+        .privacy-item-name {
+            font-size: 17px;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .privacy-item-desc {
+            font-size: 15px;
+            line-height: 1.5;
+            color: var(--text-2);
+        }
+
+        /* ─── Footer ──────────────────────────────────────────────────── */
         .footer {
-            padding: 24px 0 56px;
+            border-top: 1px solid var(--border);
+            padding: 24px 0 40px;
+        }
+        .footer-inner {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             text-align: center;
-            color: var(--text-secondary);
-            font-size: 14px;
+        }
+        .footer p {
+            font-size: 13px;
+            color: var(--text-2);
+            line-height: 1.5;
         }
         .footer a {
             color: var(--accent);
             text-decoration: none;
         }
-        @media (max-width: 1024px) {
-            .tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-            .privacy-grid { grid-template-columns: 1fr; }
+        .footer a:hover { text-decoration: underline; }
+
+        /* ─── Scroll Animations ───────────────────────────────────────── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+                        transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-        @media (max-width: 700px) {
-            .hub-shell { padding: 0 16px; }
-            .hero { padding: 72px 0 56px; }
-            .hero p { font-size: 18px; }
-            .tool-grid { grid-template-columns: 1fr; gap: 16px; }
-            .privacy-wrap { padding: 22px; }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .fade-up-delay-1 { transition-delay: 0.05s; }
+        .fade-up-delay-2 { transition-delay: 0.1s; }
+        .fade-up-delay-3 { transition-delay: 0.15s; }
+        .fade-up-delay-4 { transition-delay: 0.2s; }
+        .fade-up-delay-5 { transition-delay: 0.25s; }
+        .fade-up-delay-6 { transition-delay: 0.3s; }
+
+        /* ─── Responsive ──────────────────────────────────────────────── */
+        @media (max-width: 1024px) {
+            .tool-grid { grid-template-columns: repeat(2, 1fr); }
+            .privacy-grid { grid-template-columns: 1fr; gap: 24px; }
+        }
+        @media (max-width: 640px) {
+            .wrap { padding: 0 16px; }
+            .nav-inner { padding: 0 16px; }
+            .hero { padding: 80px 0 64px; }
+            .hero-sub { font-size: 17px; }
+            .tool-grid { grid-template-columns: 1fr; gap: 14px; }
+            .privacy-card { padding: 28px 24px; }
+            .hero h1 { letter-spacing: -0.025em; }
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="hub-shell hub-header">
-            <div class="brand">devhandbook</div>
-            <button id="themeToggle" aria-label="Toggle dark mode">
-                <svg id="sunIcon" class="w-5 h-5 hidden" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0"/></svg>
-                <svg id="moonIcon" class="w-5 h-5" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
-            </button>
+
+<!-- Navigation -->
+<nav class="nav" role="banner">
+    <div class="nav-inner">
+        <span class="brand">devhandbook</span>
+        <button class="theme-btn" id="themeToggle" aria-label="Toggle dark mode">
+            <svg id="sunIcon" style="display:none" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+            </svg>
+            <svg id="moonIcon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+            </svg>
+        </button>
+    </div>
+</nav>
+
+<main>
+    <!-- Hero -->
+    <section class="hero wrap fade-up">
+        <span class="hero-eyebrow">devhandbook.io</span>
+        <h1>Developer tools,<br><strong>built to disappear.</strong></h1>
+        <p class="hero-sub">Fast, private utilities for modern workflows. Everything runs in your browser — no accounts, no uploads, no noise.</p>
+    </section>
+
+    <!-- Tool Grid -->
+    <section class="tools-section wrap">
+        <div class="tool-grid">
+
+            <!-- JSON Formatter -->
+            <a href="json-formatter/" class="tool-card fade-up fade-up-delay-1">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/>
+                        <path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/>
+                    </svg>
+                </div>
+                <span class="tool-name">JSON Formatter</span>
+                <span class="tool-desc">Pretty print, validate, minify, and inspect JSON with structured tree output.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- JWT Debugger -->
+            <a href="jwt-debugger/" class="tool-card fade-up fade-up-delay-2">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                </div>
+                <span class="tool-name">JWT Debugger</span>
+                <span class="tool-desc">Decode token headers and payloads instantly with expiration awareness.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Base64 Converter -->
+            <a href="base64-converter/" class="tool-card fade-up fade-up-delay-3">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <polyline points="17 1 21 5 17 9"/>
+                        <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                        <polyline points="7 23 3 19 7 15"/>
+                        <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Base64 Converter</span>
+                <span class="tool-desc">Encode and decode text or files with URL-safe support.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Timestamp Converter -->
+            <a href="timestamp-converter/" class="tool-card fade-up fade-up-delay-4">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Timestamp Converter</span>
+                <span class="tool-desc">Convert Unix timestamps and human-readable dates with live updates.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Password Generator -->
+            <a href="password-generator/" class="tool-card fade-up fade-up-delay-5">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Password Generator</span>
+                <span class="tool-desc">Create strong random passwords with configurable complexity controls.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- URL Encoder -->
+            <a href="url-encoder/" class="tool-card fade-up fade-up-delay-6">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                    </svg>
+                </div>
+                <span class="tool-name">URL Encoder</span>
+                <span class="tool-desc">Encode or decode full URLs and individual URI components cleanly.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Regex Tester -->
+            <a href="regex-tester/" class="tool-card fade-up fade-up-delay-1">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Regex Tester</span>
+                <span class="tool-desc">Test patterns in real time with group matching and match highlights.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- HTML Entities -->
+            <a href="html-entities/" class="tool-card fade-up fade-up-delay-2">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <polyline points="16 18 22 12 16 6"/>
+                        <polyline points="8 6 2 12 8 18"/>
+                    </svg>
+                </div>
+                <span class="tool-name">HTML Entities</span>
+                <span class="tool-desc">Convert special characters to entities and decode them back instantly.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Color Converter -->
+            <a href="color-converter/" class="tool-card fade-up fade-up-delay-3">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+                        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Color Converter</span>
+                <span class="tool-desc">Switch between HEX, RGB, and HSL with live color preview.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- Cron Generator -->
+            <a href="cron-generator/" class="tool-card fade-up fade-up-delay-4">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span class="tool-name">Cron Generator</span>
+                <span class="tool-desc">Build cron expressions visually and validate schedules in plain English.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
+            <!-- PDF Tools -->
+            <a href="pdf-tools/" class="tool-card fade-up fade-up-delay-5">
+                <div class="tool-icon">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                </div>
+                <span class="tool-name">PDF Tools</span>
+                <span class="tool-desc">Merge, split, compress, and protect PDFs directly in your browser.</span>
+                <span class="tool-cta">Open tool <svg fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+            </a>
+
         </div>
-    </header>
+    </section>
 
-    <main class="hub-shell">
-        <section class="hero fade-in">
-            <h1>Developer tools, refined.</h1>
-            <p>Fast utilities for modern workflows. Private by design, client-side by default, and built to stay out of your way.</p>
-        </section>
-
-        <section class="tool-section fade-in">
-            <div class="tool-grid">
-                <a href="json-formatter/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">JSON</span>
-                        <h2>JSON Formatter</h2>
-                        <p>Pretty print, validate, minify, and inspect JSON with structured output.</p>
+    <!-- Privacy Section -->
+    <section class="privacy wrap fade-up">
+        <div class="privacy-card">
+            <p class="privacy-eyebrow">Privacy</p>
+            <h2 class="privacy-headline">Built different.<br>Your data stays yours.</h2>
+            <div class="privacy-grid">
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
                     </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="jwt-debugger/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">JWT</span>
-                        <h2>JWT Debugger</h2>
-                        <p>Decode token headers and payloads instantly with expiration awareness.</p>
+                    <p class="privacy-item-name">Private by design</p>
+                    <p class="privacy-item-desc">Every tool runs entirely in your browser. Your files and data never touch a server.</p>
+                </div>
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                        </svg>
                     </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="base64-converter/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">B64</span>
-                        <h2>Base64 Converter</h2>
-                        <p>Encode and decode text or files with URL-safe support when needed.</p>
+                    <p class="privacy-item-name">Instant</p>
+                    <p class="privacy-item-desc">No upload queues, no API round-trips. Results are immediate, every time.</p>
+                </div>
+                <div class="privacy-item">
+                    <div class="privacy-icon">
+                        <svg fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                            <line x1="1" y1="1" x2="23" y2="23"/>
+                            <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
+                            <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
+                            <path d="M10.71 5.05A16 16 0 0 1 22.56 9"/>
+                            <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
+                            <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
+                            <line x1="12" y1="20" x2="12.01" y2="20"/>
+                        </svg>
                     </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="timestamp-converter/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">TIME</span>
-                        <h2>Timestamp Converter</h2>
-                        <p>Convert Unix timestamps and human-readable dates with live updates.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="password-generator/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">PASS</span>
-                        <h2>Password Generator</h2>
-                        <p>Create strong random passwords with configurable complexity controls.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="url-encoder/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">URL</span>
-                        <h2>URL Encoder / Decoder</h2>
-                        <p>Encode or decode full URLs and individual URI components cleanly.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="regex-tester/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">REGX</span>
-                        <h2>Regex Tester</h2>
-                        <p>Test patterns in real time with group matching and clear highlights.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="html-entities/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">HTML</span>
-                        <h2>HTML Entities</h2>
-                        <p>Convert special characters to entities and decode them back instantly.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="color-converter/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">CLR</span>
-                        <h2>Color Converter</h2>
-                        <p>Switch between HEX, RGB, and HSL with instant color preview.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="cron-generator/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">CRON</span>
-                        <h2>Cron Generator</h2>
-                        <p>Build cron expressions visually and validate schedules quickly.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-                <a href="pdf-tools/" class="tool-card">
-                    <div>
-                        <span class="tool-icon">PDF</span>
-                        <h2>PDF Tool Suite</h2>
-                        <p>Merge, split, compress, and protect PDFs directly in browser.</p>
-                    </div>
-                    <span class="tool-link">Open tool →</span>
-                </a>
-            </div>
-        </section>
-
-        <section class="privacy fade-in">
-            <div class="privacy-wrap tool-card">
-                <div class="privacy-grid">
-                    <article class="privacy-item">
-                        <div class="privacy-icon">P</div>
-                        <h3>Private by design</h3>
-                        <p>Your files and data stay on your device. Nothing is uploaded.</p>
-                    </article>
-                    <article class="privacy-item">
-                        <div class="privacy-icon">I</div>
-                        <h3>Instant</h3>
-                        <p>No upload queues or API waits. Everything runs right away.</p>
-                    </article>
-                    <article class="privacy-item">
-                        <div class="privacy-icon">O</div>
-                        <h3>Works offline</h3>
-                        <p>After first load, tools continue to work without a network.</p>
-                    </article>
+                    <p class="privacy-item-name">Works offline</p>
+                    <p class="privacy-item-desc">After the first load, all tools continue to work with no internet connection.</p>
                 </div>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <footer class="hub-shell footer">
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-inner">
         <p>© 2026 devhandbook.io</p>
         <p><a href="/sitemap.xml">Sitemap</a></p>
-    </footer>
+    </div>
+</footer>
 
-    <script>
-        const themeToggle = document.getElementById('themeToggle');
-        const sunIcon = document.getElementById('sunIcon');
-        const moonIcon = document.getElementById('moonIcon');
+<script>
+    // Theme toggle
+    const toggle = document.getElementById('themeToggle');
+    const sun = document.getElementById('sunIcon');
+    const moon = document.getElementById('moonIcon');
 
-        function updateThemeIcons() {
-            if (document.documentElement.classList.contains('dark')) {
-                sunIcon.classList.remove('hidden');
-                moonIcon.classList.add('hidden');
-            } else {
-                sunIcon.classList.add('hidden');
-                moonIcon.classList.remove('hidden');
+    function syncIcons() {
+        const dark = document.documentElement.classList.contains('dark');
+        sun.style.display = dark ? 'block' : 'none';
+        moon.style.display = dark ? 'none' : 'block';
+    }
+    syncIcons();
+
+    toggle.addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+        localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        syncIcons();
+    });
+
+    // Intersection observer for scroll animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
             }
-        }
-
-        updateThemeIcons();
-
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-            updateThemeIcons();
         });
-    </script>
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
