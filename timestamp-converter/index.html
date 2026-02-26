@@ -410,34 +410,34 @@ html.dark .related-tool-card p { color: #98989d; }
     
         // Dynamic Related Tools
         const allTools = [
-    { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty print, validate, and inspect JSON', icon: '{ }' },
-    { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode headers and payloads instantly', icon: 'JWT' },
-    { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode and decode with URL-safe support', icon: 'B64' },
-    { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix timestamps and human dates', icon: 'TIME' },
-    { id: 'password-generator', name: 'Password Generator', desc: 'Strong passwords with complexity controls', icon: 'PASS' },
-    { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-encode and decode URLs', icon: 'URL' },
-    { id: 'regex-tester', name: 'Regex Tester', desc: 'Test patterns with group matching', icon: 'REGX' },
-    { id: 'html-entities', name: 'HTML Entities', desc: 'Convert and decode HTML entities', icon: 'HTML' },
-    { id: 'color-converter', name: 'Color Converter', desc: 'Switch between HEX, RGB, and HSL', icon: 'CLR' },
-    { id: 'cron-generator', name: 'Cron Generator', desc: 'Build and validate cron expressions', icon: 'CRON' },
-    { id: 'pdf-tools', name: 'PDF Tool Suite', desc: 'Merge, split, compress, and protect PDFs', icon: 'PDF' }
-];
+            { id: 'json-formatter', name: 'JSON Formatter', desc: 'Pretty print, validate, and inspect JSON', icon: '{ }' },
+            { id: 'jwt-debugger', name: 'JWT Debugger', desc: 'Decode headers and payloads instantly', icon: 'JWT' },
+            { id: 'base64-converter', name: 'Base64 Converter', desc: 'Encode and decode with URL-safe support', icon: 'B64' },
+            { id: 'timestamp-converter', name: 'Timestamp Converter', desc: 'Unix timestamps and human dates', icon: 'TIME' },
+            { id: 'password-generator', name: 'Password Generator', desc: 'Strong passwords with complexity controls', icon: 'PASS' },
+            { id: 'url-encoder', name: 'URL Encoder / Decoder', desc: 'Percent-encode and decode URLs', icon: 'URL' },
+            { id: 'regex-tester', name: 'Regex Tester', desc: 'Test patterns with group matching', icon: 'REGX' },
+            { id: 'html-entities', name: 'HTML Entities', desc: 'Convert and decode HTML entities', icon: 'HTML' },
+            { id: 'color-converter', name: 'Color Converter', desc: 'Switch between HEX, RGB, and HSL', icon: 'CLR' },
+            { id: 'cron-generator', name: 'Cron Generator', desc: 'Build and validate cron expressions', icon: 'CRON' },
+            { id: 'pdf-tools', name: 'PDF Tool Suite', desc: 'Merge, split, compress, and protect PDFs', icon: 'PDF' }
+        ];
         const pathParts = window.location.pathname.replace(/index\.html$/, '').split('/').filter(Boolean);
         const currentTool = pathParts[pathParts.length - 1] || '';
         const relatedEl = document.getElementById('relatedTools');
         if (relatedEl) {
             relatedEl.innerHTML = allTools
-    .filter(t => t.id !== currentTool)
-    .slice(0, 4)
-    .map(t => `
-        <a href="../${t.id}/" class="related-tool-card">
-            <div class="related-tool-icon">${t.icon}</div>
-            <div>
-                <h3>${t.name}</h3>
-                <p>${t.desc}</p>
-            </div>
-        </a>
-    `).join('');
+                .filter(t => t.id !== currentTool)
+                .slice(0, 4)
+                .map(t => `
+                    <a href="../${t.id}/" class="related-tool-card">
+                        <div class="related-tool-icon">${t.icon}</div>
+                        <div>
+                            <h3>${t.name}</h3>
+                            <p>${t.desc}</p>
+                        </div>
+                    </a>
+                `).join('');
         }
 
     </script>
