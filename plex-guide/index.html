@@ -1,0 +1,1689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plex Setup Guide - Get Started in Minutes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --plex-orange: #E5A00D;
+            --plex-dark: #282A2D;
+            --plex-black: #1a1a1a;
+            --plex-gray: #3A3A3A;
+            --plex-light-gray: #AAAAAA;
+            --plex-white: #FFFFFF;
+            --plex-success: #28a745;
+            --plex-error: #dc3545;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #282A2D 100%);
+            min-height: 100vh;
+            color: var(--plex-white);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(40, 42, 45, 0.95);
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(229, 160, 13, 0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--plex-light-gray);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--plex-orange);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--plex-orange);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--plex-dark);
+            font-size: 1.2rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--plex-white);
+        }
+
+        .logo-text span {
+            color: var(--plex-orange);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 3rem 1.5rem;
+            background: radial-gradient(ellipse at center, rgba(229, 160, 13, 0.1) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff 0%, #E5A00D 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            color: var(--plex-light-gray);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(229, 160, 13, 0.15);
+            border: 1px solid rgba(229, 160, 13, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: var(--plex-orange);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            padding: 0 1.5rem;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+
+        .progress-bar::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--plex-gray);
+            border-radius: 2px;
+            z-index: 0;
+        }
+
+        .progress-fill {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--plex-orange), #F7C600);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            z-index: 1;
+        }
+
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 2;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .step-indicator:hover {
+            transform: translateY(-2px);
+        }
+
+        .step-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--plex-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+        }
+
+        .step-indicator.active .step-circle {
+            background: var(--plex-orange);
+            color: var(--plex-dark);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(229, 160, 13, 0.5);
+        }
+
+        .step-indicator.completed .step-circle {
+            background: var(--plex-success);
+            color: white;
+        }
+
+        .step-label {
+            font-size: 0.8rem;
+            color: var(--plex-light-gray);
+            font-weight: 500;
+            text-align: center;
+            max-width: 80px;
+        }
+
+        .step-indicator.active .step-label {
+            color: var(--plex-orange);
+        }
+
+        /* Wizard Container */
+        .wizard-container {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            padding: 0 1.5rem;
+        }
+
+        .wizard-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .wizard-header {
+            background: linear-gradient(135deg, rgba(229, 160, 13, 0.15) 0%, rgba(229, 160, 13, 0.05) 100%);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(229, 160, 13, 0.2);
+        }
+
+        .wizard-header h2 {
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .step-number {
+            background: var(--plex-orange);
+            color: var(--plex-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .wizard-content {
+            padding: 2rem;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Step Content Styles */
+        .step-intro {
+            font-size: 1.1rem;
+            color: var(--plex-light-gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box {
+            background: rgba(229, 160, 13, 0.08);
+            border-left: 4px solid var(--plex-orange);
+            padding: 1rem 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box.good {
+            background: rgba(40, 167, 69, 0.08);
+            border-left-color: var(--plex-success);
+        }
+
+        .info-box-title {
+            font-weight: 600;
+            color: var(--plex-orange);
+            margin-bottom: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-box.good .info-box-title {
+            color: var(--plex-success);
+        }
+
+        .info-box p {
+            color: var(--plex-light-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Action Cards */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .action-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .action-card:hover {
+            background: rgba(229, 160, 13, 0.1);
+            border-color: rgba(229, 160, 13, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .action-card.selected {
+            background: rgba(229, 160, 13, 0.15);
+            border-color: var(--plex-orange);
+            box-shadow: 0 0 0 3px rgba(229, 160, 13, 0.2);
+        }
+
+        .action-card-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--plex-orange), #F7C600);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .action-card p {
+            font-size: 0.9rem;
+            color: var(--plex-light-gray);
+        }
+
+        .action-card .check {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--plex-gray);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .action-card.selected .check {
+            opacity: 1;
+            background: var(--plex-orange);
+        }
+
+        /* Device Selector */
+        .device-categories {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--plex-light-gray);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .category-btn.active {
+            background: var(--plex-orange);
+            color: var(--plex-dark);
+            border-color: var(--plex-orange);
+            font-weight: 600;
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .device-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.25rem 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .device-item:hover {
+            background: rgba(229, 160, 13, 0.08);
+            transform: translateY(-3px);
+        }
+
+        .device-item.selected {
+            background: rgba(229, 160, 13, 0.15);
+            border-color: var(--plex-orange);
+        }
+
+        .device-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .device-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .device-hint {
+            font-size: 0.75rem;
+            color: var(--plex-light-gray);
+            margin-top: 0.25rem;
+        }
+
+        /* Instructions Panel */
+        .instructions-panel {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .instructions-panel h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--plex-orange);
+        }
+
+        .instruction-step {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .instruction-step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .instruction-num {
+            min-width: 28px;
+            height: 28px;
+            background: var(--plex-gray);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .instruction-text {
+            flex: 1;
+        }
+
+        .instruction-text strong {
+            color: var(--plex-white);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--plex-white);
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--plex-orange);
+            box-shadow: 0 0 0 3px rgba(229, 160, 13, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: var(--plex-light-gray);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--plex-orange), #F7C600);
+            color: var(--plex-dark);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(229, 160, 13, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--plex-white);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--plex-orange);
+            color: var(--plex-orange);
+        }
+
+        .btn-outline:hover {
+            background: var(--plex-orange);
+            color: var(--plex-dark);
+        }
+
+        .wizard-nav {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Help Tooltip */
+        .help-trigger {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--plex-orange);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .help-trigger:hover {
+            text-decoration: underline;
+        }
+
+        .tooltip {
+            position: fixed;
+            background: rgba(40, 42, 45, 0.98);
+            border: 1px solid rgba(229, 160, 13, 0.3);
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            max-width: 320px;
+            z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: var(--plex-light-gray);
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip::before {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid rgba(229, 160, 13, 0.3);
+        }
+
+        .tooltip strong {
+            color: var(--plex-orange);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Accordion */
+        .accordion {
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .accordion-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-header {
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-item.open .accordion-body {
+            max-height: 500px;
+        }
+
+        .accordion-content {
+            padding: 0 1.25rem 1.25rem;
+            color: var(--plex-light-gray);
+            font-size: 0.95rem;
+        }
+
+        /* Email Mockup */
+        .email-mockup {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin: 1rem 0;
+            color: #333;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .email-header {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .email-from {
+            font-weight: 600;
+            color: #E5A00D;
+        }
+
+        .email-subject {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .email-body {
+            line-height: 1.5;
+        }
+
+        .email-btn {
+            display: inline-block;
+            background: #E5A00D;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 1rem 0;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .check-box {
+            min-width: 24px;
+            height: 24px;
+            border: 2px solid var(--plex-gray);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .check-box:hover {
+            border-color: var(--plex-orange);
+        }
+
+        .check-box.checked {
+            background: var(--plex-orange);
+            border-color: var(--plex-orange);
+        }
+
+        /* Success State */
+        .success-state {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--plex-success), #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        .success-state h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-state p {
+            color: var(--plex-light-gray);
+            margin-bottom: 2rem;
+        }
+
+        /* Links Panel */
+        .links-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.25rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.2s;
+        }
+
+        .link-card:hover {
+            background: rgba(229, 160, 13, 0.1);
+            border-color: var(--plex-orange);
+            transform: translateY(-2px);
+        }
+
+        .link-card-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .link-card h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .link-card p {
+            font-size: 0.8rem;
+            color: var(--plex-light-gray);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--plex-light-gray);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--plex-orange);
+            text-decoration: none;
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .step-indicator .step-label {
+                display: none;
+            }
+
+            .wizard-header, .wizard-content, .wizard-nav {
+                padding: 1.25rem;
+            }
+
+            .wizard-header h2 {
+                font-size: 1.25rem;
+            }
+
+            .action-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .device-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .instruction-step {
+                gap: 0.75rem;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            .header, .progress-container, .wizard-nav, .btn, .help-trigger {
+                display: none !important;
+            }
+
+            .wizard-card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+            }
+
+            body {
+                background: white;
+                color: black;
+            }
+
+            .step {
+                display: block !important;
+                page-break-after: always;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        *:focus-visible {
+            outline: 3px solid var(--plex-orange);
+            outline-offset: 2px;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">P</div>
+                <div class="logo-text">Plex <span>Setup</span></div>
+            </div>
+            <nav class="nav-links">
+                <a href="https://devhandbook.io" target="_blank">Developer Tools</a>
+                <a href="https://bmoon.dev" target="_blank">bmoon.dev</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Welcome to Plex!</h1>
+        <p>Let's get you set up to watch movies and shows from your friend's library. Follow these simple steps — no technical knowledge needed!</p>
+        <div class="badge">
+            <span>✓</span>
+            <span>Completely Free — No Credit Card Required</span>
+        </div>
+    </section>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            <div class="step-indicator active" data-step="1" onclick="goToStep(1)">
+                <div class="step-circle">1</div>
+                <div class="step-label">Create Account</div>
+            </div>
+            <div class="step-indicator" data-step="2" onclick="goToStep(2)">
+                <div class="step-circle">2</div>
+                <div class="step-label">Accept Invite</div>
+            </div>
+            <div class="step-indicator" data-step="3" onclick="goToStep(3)">
+                <div class="step-circle">3</div>
+                <div class="step-label">Get the App</div>
+            </div>
+            <div class="step-indicator" data-step="4" onclick="goToStep(4)">
+                <div class="step-circle">4</div>
+                <div class="step-label">Start Watching</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Wizard -->
+    <div class="wizard-container">
+        <div class="wizard-card">
+            <!-- Step 1: Create Account -->
+            <div class="step active" id="step1">
+                <div class="wizard-header">
+                    <h2><span class="step-number">1</span> Create Your Free Plex Account</h2>
+                </div>
+                <div class="wizard-content">
+                    <p class="step-intro">First, you'll need a Plex account. It's free and takes just a minute!</p>
+                    
+                    <div class="info-box good">
+                        <div class="info-box-title">💡 Good to Know</div>
+                        <p>Plex is completely free for watching shared libraries. You don't need to pay anything or enter a credit card.</p>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem;">Choose how you want to sign up:</h3>
+                    
+                    <div class="action-grid">
+                        <div class="action-card" onclick="selectSignup('email')">
+                            <div class="check">✓</div>
+                            <div class="action-card-icon">✉️</div>
+                            <h3>Email & Password</h3>
+                            <p>Best for most people. You'll verify your email address.</p>
+                        </div>
+                        <div class="action-card" onclick="selectSignup('google')">
+                            <div class="check">✓</div>
+                            <div class="action-card-icon">🔍</div>
+                            <h3>Google Account</h3>
+                            <p>Quick sign-up if you have Gmail or Google account.</p>
+                        </div>
+                        <div class="action-card" onclick="selectSignup('apple')">
+                            <div class="check">✓</div>
+                            <div class="action-card-icon">🍎</div>
+                            <h3>Apple ID</h3>
+                            <p>For iPhone/iPad users who prefer Apple sign-in.</p>
+                        </div>
+                    </div>
+
+                    <div class="instructions-panel" id="signupInstructions" style="display: none;">
+                        <h4>📋 Step-by-Step Instructions</h4>
+                        <div id="signupSteps"></div>
+                    </div>
+
+                    <div class="help-trigger" onclick="showTooltip(event, 'emailTip')">
+                        <span>❓</span>
+                        <span>Where's my verification email?</span>
+                    </div>
+
+                    <div class="accordion" style="margin-top: 1.5rem;">
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>⚠️ Common Problems & Solutions</span>
+                                <span class="accordion-icon">▼</span>
+                            </div>
+                            <div class="accordion-body">
+                                <div class="accordion-content">
+                                    <strong>Can't find the verification email?</strong><br>
+                                    Check your Spam or Junk folder. Look for an email from noreply@plex.tv<br><br>
+                                    <strong>Already have an account?</strong><br>
+                                    Great! You can skip to Step 2. Just click "Sign In" instead of "Sign Up"<br><br>
+                                    <strong>Created multiple accounts by mistake?</strong><br>
+                                    Don't worry — just use the email address where you received your friend's invitation.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Accept Invitation -->
+            <div class="step" id="step2">
+                <div class="wizard-header">
+                    <h2><span class="step-number">2</span> Accept Your Friend's Invitation</h2>
+                </div>
+                <div class="wizard-content">
+                    <p class="step-intro">Your friend has shared their movie and TV library with you. You need to accept this invitation to see their content.</p>
+                    
+                    <div class="info-box">
+                        <div class="info-box-title">📧 Check Your Email</div>
+                        <p>Look for an email from Plex (noreply@plex.tv) with the subject line about an invitation to a Plex Media Server.</p>
+                    </div>
+
+                    <div class="email-mockup">
+                        <div class="email-header">
+                            <div class="email-from">From: Plex &lt;noreply@plex.tv&gt;</div>
+                            <div class="email-subject">Subject: "Your Friend has invited you to their Plex Media Server"</div>
+                        </div>
+                        <div class="email-body">
+                            <p>Your friend wants to share their movie and TV collection with you!</p>
+                            <a href="#" class="email-btn" onclick="event.preventDefault(); showTooltip(event, 'acceptTip')">ACCEPT INVITATION</a>
+                        </div>
+                    </div>
+
+                    <div class="instructions-panel">
+                        <h4>✅ What to Do</h4>
+                        <div class="instruction-step">
+                            <div class="instruction-num">1</div>
+                            <div class="instruction-text">
+                                <strong>Open the email</strong> from Plex on your phone or computer
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">2</div>
+                            <div class="instruction-text">
+                                <strong>Click the "ACCEPT INVITATION" button</strong> in the email
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">3</div>
+                            <div class="instruction-text">
+                                <strong>Sign in</strong> with the Plex account you just created (if asked)
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">4</div>
+                            <div class="instruction-text">
+                                <strong>Success!</strong> The shared library is now connected to your account
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="help-trigger" onclick="showTooltip(event, 'wrongEmailTip')">
+                        <span>❓</span>
+                        <span>Getting an error when clicking the button?</span>
+                    </div>
+
+                    <div class="accordion" style="margin-top: 1.5rem;">
+                        <div class="accordion-item">
+                            <div class="accordion-header" onclick="toggleAccordion(this)">
+                                <span>🔧 Troubleshooting Invitation Problems</span>
+                                <span class="accordion-icon">▼</span>
+                            </div>
+                            <div class="accordion-body">
+                                <div class="accordion-content">
+                                    <strong>"Invitation not found" error?</strong><br>
+                                    Make sure you're signed into Plex with the same email address that received the invitation.<br><br>
+                                    <strong>Can't find the invitation email?</strong><br>
+                                    Ask your friend to resend it from their Plex server settings, or check if they sent it to a different email address.<br><br>
+                                    <strong>Button doesn't work?</strong><br>
+                                    Try copying the link address and pasting it into your browser manually.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Get the App -->
+            <div class="step" id="step3">
+                <div class="wizard-header">
+                    <h2><span class="step-number">3</span> Download the Plex App</h2>
+                </div>
+                <div class="wizard-content">
+                    <p class="step-intro">Now let's get Plex on your device. Select what you'll be using to watch:</p>
+
+                    <div class="device-categories">
+                        <button class="category-btn active" onclick="filterDevices('all', this)">All Devices</button>
+                        <button class="category-btn" onclick="filterDevices('mobile', this)">📱 Phone/Tablet</button>
+                        <button class="category-btn" onclick="filterDevices('tv', this)">📺 TV</button>
+                        <button class="category-btn" onclick="filterDevices('computer', this)">💻 Computer</button>
+                    </div>
+
+                    <div class="device-grid" id="deviceGrid">
+                        <div class="device-item" data-category="mobile" onclick="selectDevice('iphone')">
+                            <div class="device-icon">📱</div>
+                            <div class="device-name">iPhone / iPad</div>
+                            <div class="device-hint">iOS 14+</div>
+                        </div>
+                        <div class="device-item" data-category="mobile" onclick="selectDevice('android')">
+                            <div class="device-icon">🤖</div>
+                            <div class="device-name">Android</div>
+                            <div class="device-hint">Phone/Tablet</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('roku')">
+                            <div class="device-icon">📺</div>
+                            <div class="device-name">Roku</div>
+                            <div class="device-hint">Streaming Player</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('firetv')">
+                            <div class="device-icon">🔥</div>
+                            <div class="device-name">Fire TV</div>
+                            <div class="device-hint">Amazon Device</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('appletv')">
+                            <div class="device-icon">🍎</div>
+                            <div class="device-name">Apple TV</div>
+                            <div class="device-hint">tvOS Device</div>
+                        </div>
+                        <div class="device-item" data-category="computer" onclick="selectDevice('web')">
+                            <div class="device-icon">🌐</div>
+                            <div class="device-name">Web Browser</div>
+                            <div class="device-hint">No Download!</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('samsung')">
+                            <div class="device-icon">📺</div>
+                            <div class="device-name">Samsung TV</div>
+                            <div class="device-hint">Smart Hub</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('lg')">
+                            <div class="device-icon">📺</div>
+                            <div class="device-name">LG TV</div>
+                            <div class="device-hint">WebOS</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('chromecast')">
+                            <div class="device-icon">📡</div>
+                            <div class="device-name">Chromecast</div>
+                            <div class="device-hint">Google TV</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('playstation')">
+                            <div class="device-icon">🎮</div>
+                            <div class="device-name">PlayStation</div>
+                            <div class="device-hint">PS4 / PS5</div>
+                        </div>
+                        <div class="device-item" data-category="tv" onclick="selectDevice('xbox')">
+                            <div class="device-icon">🎯</div>
+                            <div class="device-name">Xbox</div>
+                            <div class="device-hint">One / Series</div>
+                        </div>
+                    </div>
+
+                    <div class="instructions-panel" id="deviceInstructions" style="display: none;">
+                        <h4>📲 Installation Steps</h4>
+                        <div id="deviceSteps"></div>
+                    </div>
+
+                    <div class="help-trigger" onclick="showTooltip(event, 'signinTip')">
+                        <span>❓</span>
+                        <span>How do I sign in on my TV?</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Start Watching -->
+            <div class="step" id="step4">
+                <div class="wizard-header">
+                    <h2><span class="step-number">4</span> Start Watching!</h2>
+                </div>
+                <div class="wizard-content">
+                    <div class="success-state">
+                        <div class="success-icon">🎉</div>
+                        <h3>You're All Set!</h3>
+                        <p>Your Plex account is ready and connected to your friend's library. Here's how to find their movies and shows:</p>
+                    </div>
+
+                    <div class="instructions-panel">
+                        <h4>🎬 Finding Your Friend's Library</h4>
+                        <div class="instruction-step">
+                            <div class="instruction-num">1</div>
+                            <div class="instruction-text">
+                                <strong>Open the Plex app</strong> and sign in with your account
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">2</div>
+                            <div class="instruction-text">
+                                <strong>Important:</strong> Ignore the "Discover" section — that's just free content from Plex
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">3</div>
+                            <div class="instruction-text">
+                                <strong>On mobile:</strong> Tap "More" at the bottom, then look for your friend's server name
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">4</div>
+                            <div class="instruction-text">
+                                <strong>On TV/Web:</strong> Look in the left sidebar for your friend's server name
+                            </div>
+                        </div>
+                        <div class="instruction-step">
+                            <div class="instruction-num">5</div>
+                            <div class="instruction-text">
+                                <strong>Tap or click</strong> the server name to see Movies, TV Shows, and more!
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 1.5rem;">
+                        <div class="info-box-title">💡 Pro Tips</div>
+                        <ul class="checklist">
+                            <li><div class="check-box checked">✓</div><span>The shared library only works when your friend's computer/server is online</span></li>
+                            <li><div class="check-box checked">✓</div><span>If videos buffer, try lowering the quality in the player settings</span></li>
+                            <li><div class="check-box checked">✓</span><span>You can create a Watchlist to save movies for later</span></li>
+                        </ul>
+                    </div>
+
+                    <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Quick Links</h3>
+                    <div class="links-grid">
+                        <a href="https://app.plex.tv/desktop" target="_blank" class="link-card">
+                            <div class="link-card-icon">🌐</div>
+                            <h4>Watch in Browser</h4>
+                            <p>app.plex.tv</p>
+                        </a>
+                        <a href="https://plex.tv/link" target="_blank" class="link-card">
+                            <div class="link-card-icon">🔗</div>
+                            <h4>Link TV Device</h4>
+                            <p>plex.tv/link</p>
+                        </a>
+                        <a href="https://support.plex.tv" target="_blank" class="link-card">
+                            <div class="link-card-icon">❓</div>
+                            <h4>Help Center</h4>
+                            <p>support.plex.tv</p>
+                        </a>
+                        <a href="https://www.plex.tv/media-server-downloads/" target="_blank" class="link-card">
+                            <div class="link-card-icon">⬇️</div>
+                            <h4>Download Apps</h4>
+                            <p>plex.tv/downloads</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wizard Navigation -->
+            <div class="wizard-nav">
+                <button class="btn btn-secondary" id="prevBtn" onclick="prevStep()" style="visibility: hidden;">
+                    ← Previous
+                </button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextStep()">
+                    Next Step →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Need more help? Visit <a href="https://support.plex.tv" target="_blank">Plex Support</a> or ask your friend who invited you!</p>
+        <p style="margin-top: 0.5rem; opacity: 0.7;">This guide is not affiliated with Plex Inc.</p>
+        <p style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <a href="https://bmoon.dev" target="_blank">bmoon.dev</a> • 
+            <a href="https://devhandbook.io" target="_blank">Developer Tools</a>
+        </p>
+    </footer>
+
+    <!-- Tooltip Container -->
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // State
+        let currentStep = 1;
+        const totalSteps = 4;
+        let selectedDevice = null;
+
+        // Step navigation
+        function goToStep(step) {
+            if (step < 1 || step > totalSteps) return;
+            
+            // Hide current step
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.step-indicator').forEach(i => i.classList.remove('active'));
+            
+            // Show new step
+            document.getElementById(`step${step}`).classList.add('active');
+            document.querySelector(`.step-indicator[data-step="${step}"]`).classList.add('active');
+            
+            // Update progress
+            currentStep = step;
+            updateProgress();
+            updateButtons();
+            
+            // Scroll to top of wizard
+            document.querySelector('.wizard-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps) {
+                // Mark current as completed
+                document.querySelector(`.step-indicator[data-step="${currentStep}"]`).classList.add('completed');
+                goToStep(currentStep + 1);
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                goToStep(currentStep - 1);
+            }
+        }
+
+        function updateProgress() {
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressFill').style.width = percentage + '%';
+        }
+
+        function updateButtons() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+            
+            if (currentStep === totalSteps) {
+                nextBtn.textContent = 'Finish ✓';
+                nextBtn.onclick = () => alert('Congratulations! You\'re all set up. Enjoy watching! 🎬');
+            } else {
+                nextBtn.textContent = 'Next Step →';
+                nextBtn.onclick = nextStep;
+            }
+        }
+
+        // Signup method selection
+        const signupMethods = {
+            email: [
+                '<strong>Go to</strong> <a href="https://www.plex.tv/sign-up/" target="_blank" style="color: var(--plex-orange);">plex.tv/sign-up</a> on your phone or computer',
+                '<strong>Enter your email address</strong> in the email field',
+                '<strong>Create a password</strong> (make it something you\'ll remember!)',
+                '<strong>Click "Create Account"</strong> or "Sign Up"',
+                '<strong>Check your email</strong> for a verification message from Plex',
+                '<strong>Click the verification link</strong> in the email (check spam if not found)',
+                '<strong>You\'re done!</strong> Your account is ready'
+            ],
+            google: [
+                '<strong>Go to</strong> <a href="https://www.plex.tv/sign-up/" target="_blank" style="color: var(--plex-orange);">plex.tv/sign-up</a> on your phone or computer',
+                '<strong>Click "Continue with Google"</strong> button',
+                '<strong>Select your Google account</strong> (or enter your Gmail)',
+                '<strong>Allow Plex</strong> to access your basic account info',
+                '<strong>You\'re done!</strong> No email verification needed with Google'
+            ],
+            apple: [
+                '<strong>Go to</strong> <a href="https://www.plex.tv/sign-up/" target="_blank" style="color: var(--plex-orange);">plex.tv/sign-up</a> on your iPhone, iPad, or Mac',
+                '<strong>Click "Continue with Apple"</strong> button',
+                '<strong>Use Face ID, Touch ID, or your Apple ID password</strong> to confirm',
+                '<strong>Choose whether to share</strong> or hide your email address',
+                '<strong>You\'re done!</strong> Your Apple ID is now linked to Plex'
+            ]
+        };
+
+        function selectSignup(method) {
+            // Update UI
+            document.querySelectorAll('.action-card').forEach(card => card.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            // Show instructions
+            const panel = document.getElementById('signupInstructions');
+            const steps = document.getElementById('signupSteps');
+            panel.style.display = 'block';
+            
+            steps.innerHTML = signupMethods[method].map((step, i) => `
+                <div class="instruction-step">
+                    <div class="instruction-num">${i + 1}</div>
+                    <div class="instruction-text">${step}</div>
+                </div>
+            `).join('');
+        }
+
+        // Device selection
+        const deviceInstructions = {
+            iphone: {
+                name: 'iPhone or iPad',
+                steps: [
+                    '<strong>Open the App Store</strong> on your device',
+                    '<strong>Search for "Plex"</strong> (look for the yellow/gold arrow logo)',
+                    '<strong>Tap "Get"</strong> then "Install"',
+                    '<strong>Open the app</strong> and tap "Sign In"',
+                    '<strong>Enter your Plex email and password</strong>',
+                    '<strong>When asked for permissions:</strong> Tap "Allow" for notifications (helps with updates)'
+                ]
+            },
+            android: {
+                name: 'Android Phone or Tablet',
+                steps: [
+                    '<strong>Open the Google Play Store</strong>',
+                    '<strong>Search for "Plex"</strong> by Plex, Inc.',
+                    '<strong>Tap "Install"</strong>',
+                    '<strong>Open the app</strong> and tap "Sign In"',
+                    '<strong>Enter your Plex account details</strong>',
+                    '<strong>Accept the permissions</strong> when asked (needed for the app to work)'
+                ]
+            },
+            roku: {
+                name: 'Roku Device',
+                steps: [
+                    '<strong>Press Home</strong> on your Roku remote',
+                    '<strong>Go to "Streaming Channels"</strong> then "Search Channels"',
+                    '<strong>Type "Plex"</strong> using the on-screen keyboard',
+                    '<strong>Select Plex</strong> and click "Add Channel"',
+                    '<strong>Launch the app</strong>',
+                    '<strong>Choose "Sign In"</strong> — a code will appear on screen',
+                    '<strong>On your phone/computer, go to</strong> <a href="https://plex.tv/link" target="_blank" style="color: var(--plex-orange);">plex.tv/link</a>',
+                    '<strong>Enter the code</strong> shown on your TV'
+                ]
+            },
+            firetv: {
+                name: 'Amazon Fire TV or Fire Stick',
+                steps: [
+                    '<strong>From the home screen</strong>, select "Find" then "Search"',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Select the Plex app</strong> (yellow arrow icon)',
+                    '<strong>Click "Get" or "Download"</strong>',
+                    '<strong>Open the app</strong> after installation',
+                    '<strong>Sign in with your Plex account</strong> (or use plex.tv/link method)'
+                ]
+            },
+            appletv: {
+                name: 'Apple TV',
+                steps: [
+                    '<strong>Open the App Store</strong> on your Apple TV',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Download the app</strong> (it\'s free)',
+                    '<strong>Open Plex</strong>',
+                    '<strong>Sign in</strong> with your Apple ID or Plex account',
+                    '<strong>Alternative:</strong> Use the plex.tv/link method if typing is difficult'
+                ]
+            },
+            web: {
+                name: 'Web Browser (No Download!)',
+                steps: [
+                    '<strong>Open any web browser</strong> (Chrome, Safari, Firefox, Edge)',
+                    '<strong>Go to</strong> <a href="https://app.plex.tv/desktop" target="_blank" style="color: var(--plex-orange);">app.plex.tv/desktop</a>',
+                    '<strong>Click "Sign In"</strong>',
+                    '<strong>Enter your Plex account details</strong>',
+                    '<strong>That\'s it!</strong> You can watch right in your browser',
+                    '<strong>Tip:</strong> Bookmark the page for easy access!'
+                ]
+            },
+            samsung: {
+                name: 'Samsung Smart TV',
+                steps: [
+                    '<strong>Press the Smart Hub</strong> button on your remote',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Install the app</strong>',
+                    '<strong>Launch Plex</strong>',
+                    '<strong>Use plex.tv/link</strong> to sign in (easier than typing with remote)'
+                ]
+            },
+            lg: {
+                name: 'LG Smart TV',
+                steps: [
+                    '<strong>Open the LG Content Store</strong>',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Install and launch</strong>',
+                    '<strong>Sign in using plex.tv/link</strong> method'
+                ]
+            },
+            chromecast: {
+                name: 'Chromecast with Google TV',
+                steps: [
+                    '<strong>Go to the Apps tab</strong> on your Google TV',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Install the app</strong>',
+                    '<strong>Sign in</strong> with your Plex account'
+                ]
+            },
+            playstation: {
+                name: 'PlayStation 4 or 5',
+                steps: [
+                    '<strong>Go to PlayStation Store</strong>',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Download the free app</strong>',
+                    '<strong>Launch and sign in</strong> with your Plex account'
+                ]
+            },
+            xbox: {
+                name: 'Xbox One or Series X/S',
+                steps: [
+                    '<strong>Open Microsoft Store</strong>',
+                    '<strong>Search for "Plex"</strong>',
+                    '<strong>Install the app</strong>',
+                    '<strong>Sign in</strong> with your Plex credentials'
+                ]
+            }
+        };
+
+        function filterDevices(category, btn) {
+            // Update buttons
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Filter devices
+            document.querySelectorAll('.device-item').forEach(item => {
+                if (category === 'all' || item.dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function selectDevice(device) {
+            selectedDevice = device;
+            
+            // Update UI
+            document.querySelectorAll('.device-item').forEach(item => item.classList.remove('selected'));
+            event.currentTarget.classList.add('selected');
+            
+            // Show instructions
+            const info = deviceInstructions[device];
+            const panel = document.getElementById('deviceInstructions');
+            const steps = document.getElementById('deviceSteps');
+            
+            panel.style.display = 'block';
+            panel.querySelector('h4').textContent = `📲 Setting up Plex on ${info.name}`;
+            
+            steps.innerHTML = info.steps.map((step, i) => `
+                <div class="instruction-step">
+                    <div class="instruction-num">${i + 1}</div>
+                    <div class="instruction-text">${step}</div>
+                </div>
+            `).join('');
+            
+            panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Accordion
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
+        }
+
+        // Tooltip system
+        const tooltips = {
+            emailTip: `<strong>Can't find the verification email?</strong><br>Check these places:<br>• Spam/Junk folder<br>• Promotions tab (Gmail)<br>• Wait 2-3 minutes<br>• Search for "Plex" in your email`,
+            acceptTip: `<strong>The button opens Plex</strong><br>You'll be taken to plex.tv to sign in and accept the invitation automatically.`,
+            wrongEmailTip: `<strong>Wrong account error?</strong><br>You must be signed into Plex with the same email that received the invitation. Try signing out and back in with the correct email.`,
+            signinTip: `<strong>Easy TV Sign-In:</strong><br>1. Open Plex on your TV<br>2. Choose "Sign In"<br>3. TV shows a 4-letter code<br>4. On phone/computer go to <strong>plex.tv/link</strong><br>5. Enter the code<br>6. TV signs in automatically!`
+        };
+
+        function showTooltip(event, tipId) {
+            event.stopPropagation();
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = tooltips[tipId] || 'Help information';
+            tooltip.classList.add('visible');
+            
+            // Position tooltip above the trigger
+            const rect = event.target.getBoundingClientRect();
+            tooltip.style.left = rect.left + 'px';
+            tooltip.style.top = (rect.top - tooltip.offsetHeight - 10) + 'px';
+            
+            // Hide on click elsewhere
+            setTimeout(() => {
+                document.addEventListener('click', hideTooltip, { once: true });
+            }, 10);
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('visible');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                nextStep();
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                prevStep();
+            }
+        });
+
+        // Initialize
+        updateProgress();
+        updateButtons();
+
+        // Checklist interaction
+        document.querySelectorAll('.check-box').forEach(box => {
+            box.addEventListener('click', function() {
+                this.classList.toggle('checked');
+            });
+        });
+
+        // Save progress to localStorage
+        window.addEventListener('beforeunload', () => {
+            localStorage.setItem('plexSetupProgress', currentStep);
+        });
+
+        // Restore progress if available
+        window.addEventListener('load', () => {
+            const saved = localStorage.getItem('plexSetupProgress');
+            if (saved && saved > 1) {
+                // Optionally restore - disabled for clean start each time
+                // goToStep(parseInt(saved));
+            }
+        });
+    </script>
+</body>
+</html>
