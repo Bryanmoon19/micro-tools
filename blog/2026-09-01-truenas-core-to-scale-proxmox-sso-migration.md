@@ -24,7 +24,7 @@ This is the setup I run on my own hardware, adapted so you can follow along. No 
 
 Before I touch anything, here's the concrete starting point, because "migrate your NAS" is useless without a real topology:
 
-- **Hypervisor:** Proxmox VE on a host I call `venus` (192.168.7.134)
+- **Hypervisor:** Proxmox VE on a host I call `venus` (RFC1918 private subnet, redacted)
 - **Old NAS:** TrueNAS Core running as a VM, with a single ZFS pool (`tank`) passed through via PCIe HBA passthrough
 - **The pool:** `tank` with a few datasets — `tank/media`, `tank/backups`, `tank/documents` — and a handful of SMB shares
 - **Identity:** Authentik running in Docker on a separate LXC, already protecting Proxmox, Grafana, and a few other services
